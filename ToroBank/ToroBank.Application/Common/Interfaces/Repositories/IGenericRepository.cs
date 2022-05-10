@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToroBank.Application.Common.Wrappers;
+﻿using ToroBank.Application.Common.Wrappers;
 using ToroBank.Domain.Common;
 
 namespace ToroBank.Application.Common.Interfaces.Repositories

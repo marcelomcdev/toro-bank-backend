@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToroBank.Application.Common.Wrappers
+﻿namespace ToroBank.Application.Common.Wrappers
 {
     public class PagedResponse<T>
     {

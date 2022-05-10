@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ToroBank.Application.Common.Exceptions
+﻿namespace ToroBank.Application.Common.Exceptions
 {
     public class BadRequestException : ApplicationException
     {
