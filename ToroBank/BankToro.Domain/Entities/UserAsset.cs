@@ -2,7 +2,7 @@
 
 namespace ToroBank.Domain.Entities
 {
-    public class UserAsset : BaseEntity
+    public class UserAsset : BaseAuditableEntity<int>
     {
         protected UserAsset() { }
         public UserAsset(int assetId, int userId)
@@ -10,7 +10,9 @@ namespace ToroBank.Domain.Entities
             AssetId = assetId;
             UserId = userId;
         }
+        public override int Id { get; set; }
         public int AssetId { get; set; }
         public int UserId { get; set; }
+       
     }
 }

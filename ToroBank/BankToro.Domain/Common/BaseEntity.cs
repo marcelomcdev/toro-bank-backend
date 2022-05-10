@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ToroBank.Domain.Common
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity<TKey> where TKey : IEquatable<TKey>
     {
-        public int Id { get; set; }
+        public abstract TKey Id { get; set; }
     }
+
 }
