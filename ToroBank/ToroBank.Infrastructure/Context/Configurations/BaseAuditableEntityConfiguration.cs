@@ -16,12 +16,24 @@ namespace ToroBank.Infrastructure.Persistence.Context.Configurations
     {
         public virtual void Configure(EntityTypeBuilder<T> builder)
         {
-            // IDENTITY
+            // Identity
             builder.HasKey(t => t.Id);
 
             builder.Property(t => t.Id)
                 .ValueGeneratedOnAdd()
                 .IsRequired();
+
+            // Audit
+            builder.Property(t => t.Created)
+                .IsRequired();
+
+            builder.Property(t => t.CreatedBy)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            builder.Property(t => t.LastModifiedBy)
+                .HasMaxLength(255);
+
         }
     }
 }
