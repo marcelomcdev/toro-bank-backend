@@ -15,5 +15,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\ToroBank.Application\ToroBank.Application.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	  <Folder Include="Repositories\" />
+	</ItemGroup>
 	
 </Project>
