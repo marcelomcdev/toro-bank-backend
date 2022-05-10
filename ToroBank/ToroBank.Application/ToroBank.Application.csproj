@@ -16,5 +16,11 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\BankToro.Domain\ToroBank.Domain.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Common\Interfaces\Services\" />
+	  <Folder Include="Common\Behaviours\" />
+	  <Folder Include="Common\Features\" />
+	</ItemGroup>
 	
 </Project>
