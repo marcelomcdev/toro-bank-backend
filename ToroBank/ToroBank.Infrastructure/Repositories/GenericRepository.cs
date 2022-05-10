@@ -2,7 +2,7 @@
 using ToroBank.Application.Common.Interfaces.Repositories;
 using ToroBank.Application.Common.Wrappers;
 using ToroBank.Domain.Common;
-using ToroBank.Infrastructure.Persistence.Context.Configurations;
+using ToroBank.Infrastructure.Persistence.Context;
 
 namespace ToroBank.Infrastructure.Persistence.Repositories
 {
@@ -24,8 +24,6 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
 
         public virtual async Task<PagedResponse<T>> GetPagedReponseAsync(int pageNumber, int pageSize)
         {
-            // TODO: refactor this. 2 roundtrips???
-
             int totalCount = await _dbContext
                 .Set<T>()
                 .AsNoTracking()

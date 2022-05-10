@@ -19,7 +19,8 @@
 
 	<ItemGroup>
 	  <Folder Include="Common\Behaviours\" />
-	  <Folder Include="Common\Features\" />
+	  <Folder Include="Features\Users\Commands\" />
+	  <Folder Include="Features\Users\Queries\" />
 	</ItemGroup>
 	
 </Project>

@@ -6,7 +6,7 @@
         public IEnumerable<string> Errors { get; }
         public bool IsFailure => !IsSuccess;
 
-        protected Result(bool isSuccess, IEnumerable<string> errors = null)
+        protected Result(bool isSuccess, IEnumerable<string>? errors = null)
         {
             if ((isSuccess && errors?.Count() > 0) || (!isSuccess && errors?.Count() <= 0))
             {

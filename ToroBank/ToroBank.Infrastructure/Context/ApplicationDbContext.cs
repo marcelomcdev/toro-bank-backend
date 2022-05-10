@@ -6,7 +6,7 @@ using ToroBank.Application.Common.Interfaces.Services;
 using ToroBank.Domain.Common;
 using ToroBank.Domain.Entities;
 
-namespace ToroBank.Infrastructure.Persistence.Context.Configurations
+namespace ToroBank.Infrastructure.Persistence.Context
 {
     public class ApplicationDbContext : DbContext
     {
