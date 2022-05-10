@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="FluentValidation" Version="10.3.4" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />
+		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 	</ItemGroup>
@@ -18,9 +19,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Common\Behaviours\" />
-	  <Folder Include="Features\Users\Commands\" />
-	  <Folder Include="Features\Users\Queries\" />
+	  <Folder Include="Features\Assets\Commands\" />
+	  <Folder Include="Features\Assets\Queries\GetMostTradedAssetsInLastSevenDays\" />
+	  <Folder Include="Features\Transfer\Queries\" />
+	  <Folder Include="Features\UserAssets\Commands\CreateUserAsset\" />
+	  <Folder Include="Features\UserAssets\Queries\GetAssetsFromUser\" />
+	  <Folder Include="Features\Users\Commands\UpdateUserBalance\" />
+	  <Folder Include="Features\Users\Queries\GetUserByCpf\" />
 	</ItemGroup>
 	
 </Project>
