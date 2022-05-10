@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,9 +45,13 @@ namespace Application.UnitTests.UseCases
                 repository.UpdateAsync(user);
             }
 
-            Assert.IsNotNull(user);
-            Assert.AreEqual(mock.Amount, user?.Balance);
-            
+            user.Should().NotBeNull();
+            user?.Balance.Should().Be(1000);
+
+            mock.Should().NotBeNull();
+            mock.Amount.Should().NotBe(0);
+            mock.Origin.CPF.Should().NotBeNull();
+            mock.Origin.CPF.Should().Match(mock.Origin.CPF);
         }
     }
 
@@ -94,6 +99,9 @@ namespace Application.UnitTests.UseCases
         public string? Bank { get; set; }
         public string? Branch { get; set; }
     }
+
+
+
 
 
 }
