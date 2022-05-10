@@ -1,5 +1,8 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using ToroBank.Domain.Entities;
 
 namespace Application.UnitTests.UseCases
 {
@@ -21,8 +24,50 @@ namespace Application.UnitTests.UseCases
         [Test]
         public void Should_pass_when_transfer_is_valid()
         {
+            //o modelo de transferencia deve ser válido
+            var mock = new TransferRequest()
+            {
+                Event = "TRANSFER",
+                Amount = 1000M,
+                Origin = new OriginTransferObject() { Bank = "033", Branch = "03312", CPF = "45358996060" },
+                Target = new TargetTransferObject() { Bank = "352", Branch = "0001", Account = "300123" }
+            };
 
-            Assert.Fail();
+            //deve ser o mesmo cpf do usuario
+            var repository = new UserRepository();
+            var user = repository.GetByCPFAsync(mock.Origin.CPF);
+
+            //deve gravar o valor do saldo
+            if(user != null)
+            {
+                user.Balance += mock.Amount;
+                repository.UpdateAsync(user);
+            }
+
+            Assert.IsNotNull(user);
+            Assert.AreEqual(mock.Amount, user?.Balance);
+            
+        }
+    }
+
+    public interface IUserRepository
+    {
+        User GetByCPFAsync(string cpf);
+        Task<User> UpdateAsync(User user);
+    }
+
+    public class UserRepository : IUserRepository
+    {
+        public User? GetByCPFAsync(string cpf)
+        {
+            var list = new List<User>() { new User(300123,"Marcelo", "12345678999",0), new User(300124, "João", "45358996060") };
+            return list.FirstOrDefault(f => f.CPF.Equals(cpf, System.StringComparison.Ordinal));
+        }
+
+        public Task<User> UpdateAsync(User user)
+        {
+            user.Id += 1;
+            return Task.FromResult(user);
         }
     }
 
@@ -49,10 +94,6 @@ namespace Application.UnitTests.UseCases
         public string? Bank { get; set; }
         public string? Branch { get; set; }
     }
-
-
-
-    
 
 
 }
