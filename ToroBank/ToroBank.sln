@@ -21,11 +21,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "Domain.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Domain", "BankToro.Domain\ToroBank.Domain.csproj", "{82AF7B42-3568-4E13-A82A-2EF9AD106702}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Infrastructure", "ToroBank.Infrastructure\ToroBank.Infrastructure.csproj", "{5D7F1C75-8131-4984-A979-785D958B3687}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Infrastructure.Persistence", "ToroBank.Infrastructure\ToroBank.Infrastructure.Persistence.csproj", "{5D7F1C75-8131-4984-A979-785D958B3687}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Application", "ToroBank.Application\ToroBank.Application.csproj", "{5F24B1FF-09D7-438E-A653-2809BB335347}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.WebApi", "ToroBank.WebApi\ToroBank.WebApi.csproj", "{492AB2F7-D0A2-4CF1-BC81-958979385062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Infrastructure.Shared", "ToroBank.Infrastructure.Shared\ToroBank.Infrastructure.Shared.csproj", "{DDCA8631-3521-47E9-9568-693C0BE1B10B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{492AB2F7-D0A2-4CF1-BC81-958979385062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{492AB2F7-D0A2-4CF1-BC81-958979385062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{492AB2F7-D0A2-4CF1-BC81-958979385062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDCA8631-3521-47E9-9568-693C0BE1B10B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDCA8631-3521-47E9-9568-693C0BE1B10B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDCA8631-3521-47E9-9568-693C0BE1B10B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDCA8631-3521-47E9-9568-693C0BE1B10B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{5D7F1C75-8131-4984-A979-785D958B3687} = {C09D46EB-6AE6-4C87-846C-03C67277BB6C}
 		{5F24B1FF-09D7-438E-A653-2809BB335347} = {B0F80F19-043B-4F8B-9538-4D3D5A58F0AA}
 		{492AB2F7-D0A2-4CF1-BC81-958979385062} = {526E6818-711D-4C88-AF7D-92A263B4F058}
+		{DDCA8631-3521-47E9-9568-693C0BE1B10B} = {C09D46EB-6AE6-4C87-846C-03C67277BB6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6ED56B9F-AA14-4503-A7CD-1198427F6372}
