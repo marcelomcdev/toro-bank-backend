@@ -1,18 +1,55 @@
 ﻿using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer;
+using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer.Objects;
+using ToroBank.Application.Features.Users;
 using ToroBank.Domain.Entities;
+using ToroBank.Infrastructure.Persistence.Repositories;
 
 namespace Application.UnitTests.UseCases
 {
     public class TransferUseCaseTest
     {
+        private Mock<IUserRepository> mockUserRepository = new Mock<IUserRepository>();
+        private User mockUser;
+        private ReceiveTransferCommand sut;
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _ct;
+
         [SetUp]
         public void Setup()
         {
+            mockUserRepository = new Mock<IUserRepository>();
+            mockUser = new User(300123, "Marcelo Martins de Castro", "45358996060", 350);
+            sut = new ReceiveTransferCommand()
+            {
+                Event = "TRANSFER",
+                Amount = 1000M,
+                Origin = new OriginTransferObjectCommand() { Bank = "033", Branch = "03312", CPF = "45358996060" },
+                Target = new TargetTransferObjectCommand() { Bank = "352", Branch = "0001", Account = "300123" }
+            };
+
+            mockUserRepository.Setup(repo => repo.UpdateAsync(It.IsAny<User>())).Returns(Task.FromResult(mockUser));
+            mockUserRepository.Setup(repo => repo.GetByCPFAsync(It.IsAny<string>())).Returns(Task.FromResult(mockUser));
+
+            _tokenSource = new CancellationTokenSource();
+            _ct = _tokenSource.Token;
+
         }
+
+        private void ExecuteHandler()
+        {
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
+        }
+
+
 
         /// <summary>
         /// Eu, como investidor, gostaria de poder depositar um valor na minha conta Toro, através de PiX ou TED bancária, para que eu possa realizar investimentos.
@@ -25,80 +62,62 @@ namespace Application.UnitTests.UseCases
         [Test]
         public void Should_pass_when_transfer_is_valid()
         {
-            //o modelo de transferencia deve ser válido
-            var mock = new TransferRequest()
-            {
-                Event = "TRANSFER",
-                Amount = 1000M,
-                Origin = new OriginTransferObject() { Bank = "033", Branch = "03312", CPF = "45358996060" },
-                Target = new TargetTransferObject() { Bank = "352", Branch = "0001", Account = "300123" }
-            };
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
 
-            //deve ser o mesmo cpf do usuario
-            var repository = new UserRepository();
-            var user = repository.GetByCPFAsync(mock.Origin.CPF);
+            sut.Should().NotBeNull();
+            sut.Event.Should().NotBeNull();
+            sut.Event.Should().NotBeEmpty();
 
-            //deve gravar o valor do saldo
-            if(user != null)
-            {
-                user.Balance += mock.Amount;
-                repository.UpdateAsync(user);
-            }
+            sut.Origin.CPF.Should().NotBeNull();
+            sut.Origin.CPF.Should().Match(mockUser.CPF);
 
-            user.Should().NotBeNull();
-            user?.Balance.Should().Be(1000);
+            sut.Amount.Should().NotBe(0);
 
-            mock.Should().NotBeNull();
-            mock.Amount.Should().NotBe(0);
-            mock.Origin.CPF.Should().NotBeNull();
-            mock.Origin.CPF.Should().Match(mock.Origin.CPF);
+            mockUser.Balance.Should().Be(1350);
         }
-    }
 
-    public interface IUserRepository
-    {
-        User GetByCPFAsync(string cpf);
-        Task<User> UpdateAsync(User user);
-    }
-
-    public class UserRepository : IUserRepository
-    {
-        public User? GetByCPFAsync(string cpf)
+        [Test]
+        public void Should_pass_if_balance_is_eq_1350()
         {
-            var list = new List<User>() { new User(300123,"Marcelo", "12345678999",0), new User(300124, "João", "45358996060") };
-            return list.FirstOrDefault(f => f.CPF.Equals(cpf, System.StringComparison.Ordinal));
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
+            mockUser.Balance.Should().Be(1350);
         }
 
-        public Task<User> UpdateAsync(User user)
+        [Test]
+        public void Should_pass_if_origin_cpf_is_eq_user_cpf()
         {
-            user.Id += 1;
-            return Task.FromResult(user);
+            mockUser = new User(300123, "Marcelo Martins de Castro", "45358996060", 350);
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
+
+            sut.Origin.CPF.Should().Match(mockUser.CPF);
         }
+
+        [Test]
+        public void Should_pass_if_event_is_transfer()
+        {
+            
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
+
+            sut.Event.Should().Match("TRANSFER");
+        }
+
+        [Test]
+        public void Should_have_error_if_event_is_different_of_transfer()
+        {
+            sut.Event = "DEPOSIT";
+
+            Assert.Throws<AggregateException>(ExecuteHandler);
+            sut.Event.Should().NotMatch("TRANSFER");
+        }
+
+        
+
     }
 
-    public class TransferRequest
-    {
-        public string? Event { get; set; }
-        public TargetTransferObject? Target { get; set; }
-        public OriginTransferObject? Origin { get; set; }
-        public decimal Amount { get; set; }
-    }
-
-    public class TargetTransferObject : BaseTransferObject
-    {
-        public string? Account { get; set; }
-    }
-
-    public class OriginTransferObject : BaseTransferObject
-    {
-        public string? CPF { get; set; }
-    }
-
-    public abstract class BaseTransferObject
-    {
-        public string? Bank { get; set; }
-        public string? Branch { get; set; }
-    }
 
 
 
