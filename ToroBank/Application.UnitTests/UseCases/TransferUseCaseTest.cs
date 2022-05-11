@@ -85,36 +85,8 @@ namespace Application.UnitTests.UseCases
             mockUser.Balance.Should().Be(1350);
         }
 
-        [Test]
-        public void Should_pass_if_origin_cpf_is_eq_user_cpf()
-        {
-            mockUser = new User(300123, "Marcelo Martins de Castro", "45358996060", 350);
-            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
-            var result = handler.Handle(sut, _ct).Result;
-
-            sut.Origin.CPF.Should().Match(mockUser.CPF);
-        }
-
-        [Test]
-        public void Should_pass_if_event_is_transfer()
-        {
-            
-            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
-            var result = handler.Handle(sut, _ct).Result;
-
-            sut.Event.Should().Match("TRANSFER");
-        }
-
-        [Test]
-        public void Should_have_error_if_event_is_different_of_transfer()
-        {
-            sut.Event = "DEPOSIT";
-
-            Assert.Throws<AggregateException>(ExecuteHandler);
-            sut.Event.Should().NotMatch("TRANSFER");
-        }
-
         
+
 
     }
 
