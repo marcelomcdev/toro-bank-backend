@@ -10,8 +10,8 @@ namespace Application.UnitTests.UseCases
     public class BuyOrderTest
     {
         private List<Asset> mockAssetBase;
-        private List<NegotiatedAssetItem> mockNegotiatedAssets;
-        private List<MostNegotiatedAssetItem> mockMostNegotiatedAssetsFroLastSevenDays;
+        private List<NegotiatedAsset> mockNegotiatedAssets;
+        private List<MostNegotiatedAsset> mockMostNegotiatedAssetsFroLastSevenDays;
         private UserAsset assetToSave;
         private decimal price, subtotal, balance;
         private User mockUser;
@@ -34,7 +34,7 @@ namespace Application.UnitTests.UseCases
 
             mockPurchaseOrder = new PurchaseOrder() { User = mockUser };
             mockPurchaseOrderWithAssets = new PurchaseOrder() { User = mockUser, AcquiredAssets = AssetsPurchasedByUser };
-            mockNegotiatedAssets = new List<NegotiatedAssetItem>();
+            mockNegotiatedAssets = new List<NegotiatedAsset>();
 
             mockAssetBase = new List<Asset>() {
                 new Asset(1, "PETR4", 28.44M ),
@@ -57,7 +57,7 @@ namespace Application.UnitTests.UseCases
                 int assetId = rndAsset.Next(1, 6);
                 if (mockAssetBase.Any(f => f.Id == assetId))
                 {
-                    mockNegotiatedAssets.Add(new NegotiatedAssetItem { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == assetId), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                    mockNegotiatedAssets.Add(new NegotiatedAsset { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == assetId), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
                 }
             }
 
@@ -65,19 +65,19 @@ namespace Application.UnitTests.UseCases
             {
                 if (mockNegotiatedAssets.Count(f => f.Asset.Id == i) == 0)
                 {
-                    mockNegotiatedAssets.Add(new NegotiatedAssetItem { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == i), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                    mockNegotiatedAssets.Add(new NegotiatedAsset { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == i), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
                 }
             }
 
             mockMostNegotiatedAssetsFroLastSevenDays = (from x in mockNegotiatedAssets
                                                             .Where(f => f.AcquiredAt >= DateTime.Now.AddDays(-7).Date && f.AcquiredAt <= DateTime.Now.Date)
                                                             .GroupBy(f => f.Asset)
-                                         select new MostNegotiatedAssetItem { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
+                                         select new MostNegotiatedAsset { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
                                                             .OrderByDescending(f => f.Quantity).ToList();
             
         }
         
-        private void ExecuteUseCase(PurchaseOrder purchaseOrder, MostNegotiatedAssetItem selectedAsset, int quantity)
+        private void ExecuteUseCase(PurchaseOrder purchaseOrder, MostNegotiatedAsset selectedAsset, int quantity)
         {
             assetToSave = null;
             price = selectedAsset.Asset.Value;

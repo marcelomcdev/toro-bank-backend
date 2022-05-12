@@ -7,7 +7,7 @@ using ToroBank.Domain.Entities;
 
 namespace ToroBank.Application.Common.DTOs.Assets
 {
-    public class NegotiatedAssetItem
+    public class NegotiatedAsset
     {
         public Guid Id { get; set; }
         public int UserId { get; set; }
