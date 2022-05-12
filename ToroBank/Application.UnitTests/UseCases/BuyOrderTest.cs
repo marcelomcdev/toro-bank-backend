@@ -48,9 +48,9 @@ namespace Application.UnitTests.UseCases
 
             var mockAssetBase = new List<Asset>() {
                 new Asset{ Id =1, Name = "PETR4", Value = 28.44M },
-                new Asset{ Id =2, Name = "MGLU3", Value = 28.44M },
+                new Asset{ Id =2, Name = "MGLU3", Value = 25.91M },
                 new Asset{ Id =3, Name = "VVAR3", Value = 25.91M },
-                new Asset{ Id =4, Name = "SANB11", Value = 25.91M },
+                new Asset{ Id =4, Name = "SANB11", Value = 40.77M },
                 new Asset{ Id =5, Name = "TORO4", Value = 115.98M },
             };
 
@@ -107,10 +107,77 @@ namespace Application.UnitTests.UseCases
             return mostNegotiatedOrdered;
         }
 
+
         [Test]
         public void Should_have_pass_if_conditions_are_valid()
         {
-            Assert.Fail();
+            /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
+             * pelo menos R$122.31 disponível em conta corrente e, em caso afirmativo, realizar a compra (debitar o saldo e registrar as novas quantidades de ativos SANB11 ao cliente). 
+             * Caso não tenha saldo suficiente, ou o ativo informado seja invalido, a API deve retornar uma codido e uma mensagem de erro indicando "saldo insuficiente" ou "ativo invalido". 
+             * Esta operação deve impactar o saldo e a lista de ativos do usuário.*/
+            UserAsset assetToSave = null;
+            var userAssets = new List<UserAsset>();
+
+            //SIMULA OPERAÇÃO DA TELA DE LISTAGEM
+            var user = new User(123456, "João", "123123456452", 123.24M);
+            user.Id = 1;
+            ////1. Carregar uma lista com 5 itens mais negociados.
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            ////2. Selecionar um item: SANB11
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+
+            //REGRA DE NEGOCIO DA COMPRA
+            ////3. Calcular o preço da ação vezes a quantidade e guardar o preço
+            int quantity = 3;
+            var price = selectedAsset.Asset.Value;
+            var subtotal = quantity * price;
+
+            ////4. Verificar saldo disponível na conta do usuario
+            var balance = user.Balance;
+
+
+            ////5. Se o saldo for menor que R$122.31 - NÃO REALIZAR COMPRA
+            if (balance < subtotal)
+            {
+                //nao realiza compra
+                ////5.1. retornar mensagem 'saldo insuficiente' para o usuario
+                
+                throw new InvalidOperationException("Saldo insuficiente!");
+                
+            }
+            else
+            {
+                ////6. Se o saldo for maior que R$122.31 - REALIZAR COMPRA
+                ////6.1. Debitar o valor do saldo do cliente.
+                user.Balance -= subtotal;
+
+                //pesquisar ativos
+                assetToSave = userAssets.FirstOrDefault(f=> f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
+
+                ////6.2. Registrar quantidades de ativos SANB11 ao cliente.
+                
+                if (userAssets.Count() == 0)
+                {
+                    ////6.2.1. Se nao houver ativos, criar e adicionar valor.
+                    userAssets.Add(new UserAsset(selectedAsset.Asset.Id, user.Id, quantity));
+                    assetToSave = userAssets.FirstOrDefault(f => f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
+                }
+                else
+                {
+                    if(assetToSave != null)
+                    {
+                        ////6.2.2. Atualiza quantidade do ativo existente ao cliente.
+                        assetToSave.Quantity += quantity;
+                    }
+                }
+            }
+
+            ///FIM DA REGRA DE NEGOCIO
+
+            Assert.IsNotNull(userAssets);
+            Assert.AreEqual(quantity, assetToSave.Quantity);
+            Assert.IsTrue(user.Balance > 0);
+
         }
     }
 }
