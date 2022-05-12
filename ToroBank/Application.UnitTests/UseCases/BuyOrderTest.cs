@@ -145,6 +145,7 @@ namespace Application.UnitTests.UseCases
             assetToSave = null;
 
             ////3. Calcular o preço da ação vezes a quantidade e guardar o preço
+            
             price = selectedAsset.Asset.Value;
             subtotal = quantity * price;
 
@@ -152,6 +153,10 @@ namespace Application.UnitTests.UseCases
             balance = purchaseOrder.User.Balance;
 
             ////5. Se o saldo for menor que R$122.31 - NÃO REALIZAR COMPRA
+            if(subtotal <= 0)
+            {
+                throw new InvalidOperationException("Ativo inválido!");
+            }
             if (balance < subtotal)
             {
                 //nao realiza compra
@@ -227,7 +232,6 @@ namespace Application.UnitTests.UseCases
             var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
             var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
             int quantity = 3;
-
             
             Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
             Assert.NotNull(mockPurchaseOrder);
@@ -238,14 +242,29 @@ namespace Application.UnitTests.UseCases
         [Test]
         public void Should_pass_if_the_asset_are_updated_in_customer_list_after_purchase()
         {
-            Assert.Fail();
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 3;
+
+            Assert.IsTrue(mockPurchaseOrderWithAssets.AcquiredAssets.Count() == 4);
+
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrderWithAssets, selectedAsset, quantity));
+            Assert.NotNull(mockPurchaseOrderWithAssets);
+            Assert.NotNull(mockPurchaseOrderWithAssets.AcquiredAssets);
+            Assert.IsTrue(mockPurchaseOrderWithAssets.AcquiredAssets.Count() == 5);
         }
 
 
         [Test]
         public void Should_not_pass_if_the_selected_asset_is_invalid()
         {
-            Assert.Fail();
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 3;
+            selectedAsset.Asset.Value = 0;
+           
+            Assert.AreEqual(0, selectedAsset.Asset.Value);
+            Assert.Throws<InvalidOperationException>(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
         }
 
 
