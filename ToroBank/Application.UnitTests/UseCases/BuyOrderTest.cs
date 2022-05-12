@@ -192,6 +192,18 @@ namespace Application.UnitTests.UseCases
         //se o saldo for acima do minimo para compra, saldo deve ser impactado após a finalização da compra.
         //nao deve passar se o saldo do usuario for menor que o subtotal
         //nao deve passar se o ativo selecionado for invalido: ex: selecionei o SANB11, mas veio TORO
+        [Test]
+        public void Should_pass_if_balance_is_updated_after_operation()
+        {
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 3;
+
+            Assert.AreEqual(123.24M, mockUser.Balance);
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
+            Assert.Less(mockUser.Balance, 123.24M);
+        }
+
 
         [Test]
         public void Should_have_error_if_balance_is_insuficient()
