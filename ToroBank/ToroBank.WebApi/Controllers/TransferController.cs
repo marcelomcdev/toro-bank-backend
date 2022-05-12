@@ -6,7 +6,8 @@ using ToroBank.Application.Features.Users;
 
 namespace ToroBank.WebApi.Controllers
 {
-    [Route("api/[controller]/spb")]
+    //[Route("api/[controller]")]
+    [Route("spb")]
     [ApiController]
     public class TransferController : ControllerBase
     {
@@ -20,9 +21,9 @@ namespace ToroBank.WebApi.Controllers
         }
 
         /// <summary>
-        /// Transfer event notification.
+        /// Receives a bank transfer notification and updates the recipient user's balance
         /// </summary>
-        /// <param name="cmd"></param>
+        /// <param name="cmd">A request object</param>
         /// <returns></returns>
         [HttpPost("events")]
         [ProducesResponseType(StatusCodes.Status201Created)]
