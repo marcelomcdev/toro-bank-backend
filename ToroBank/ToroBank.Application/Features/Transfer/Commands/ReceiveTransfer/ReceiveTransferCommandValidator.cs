@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToroBank.Application.Common.Exceptions.Constants;
 using ToroBank.Application.Features.Users;
 
 namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
@@ -13,10 +14,8 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
         private readonly IUserRepository _userRepository;
         public ReceiveTransferCommandValidator(IUserRepository _userRepository)
         {
-            //this._userRepository = _userRepository;
-            string errorPropertyNull = "A propriedade {PropertyName} não pode ser nula.";
-            string errorPropertyEmpty = "A propriedade {PropertyName} não pode ser vazia.";
-
+            string errorPropertyNull = ErrorMessage.ErrorPropertyNull; // "A propriedade {PropertyName} não pode ser nula.";
+            string errorPropertyEmpty = ErrorMessage.ErrorPropertyEmpty; //"A propriedade {PropertyName} não pode ser vazia.";
 
             RuleFor(p => p).NotEmpty().WithMessage(errorPropertyEmpty).NotNull().WithMessage(errorPropertyNull);
             RuleFor(p => p.Event).NotEmpty().WithMessage("{PropertyName} é obrigatório.").NotNull().Equals("TRANSFER");
@@ -35,7 +34,6 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
             RuleFor(p => p.Target.Account).NotEmpty().WithMessage(errorPropertyEmpty).NotNull().WithMessage(errorPropertyNull);
 
             RuleFor(p => p.Amount).GreaterThan(0).WithMessage("O valor da transferência deve ser maior que zero.");
-
 
         }
     }
