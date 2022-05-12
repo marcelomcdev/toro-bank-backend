@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ToroBank.Application.Common.Wrappers;
 using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer;
 using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer.Objects;
 using ToroBank.Application.Features.Users;
@@ -85,6 +86,7 @@ namespace Application.UnitTests.UseCases
             mockUser.Balance.Should().Be(1350);
         }
 
+
         [Test]
         public void Should_pass_if_origin_cpf_is_eq_user_cpf()
         {
@@ -110,7 +112,7 @@ namespace Application.UnitTests.UseCases
         {
             sut.Event = "DEPOSIT";
 
-            Assert.Throws<AggregateException>(ExecuteHandler);
+            Assert.Throws<AggregateException>(()=> ExecuteHandler());
             sut.Event.Should().NotMatch("TRANSFER");
         }
 
