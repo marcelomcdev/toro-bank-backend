@@ -97,6 +97,20 @@ namespace Application.UnitTests.UseCases
             Assert.IsTrue(mockMostNegotiatedAssetsFroLastSevenDays.Count() == 5);
         }
 
-        
+        private List<MostNegotiatedAssetItem> ReturnMostNegotiatedAssetsFromLastDays(int days)
+        {
+            var mostNegotiatedOrdered = (from x in mockNegotiatedAssets
+                                                            .Where(f => f.AcquiredAt >= DateTime.Now.AddDays(-days).Date && f.AcquiredAt <= DateTime.Now.Date)
+                                                            .GroupBy(f => f.Asset)
+                                         select new MostNegotiatedAssetItem { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
+                                                            .OrderByDescending(f => f.Quantity).ToList();
+            return mostNegotiatedOrdered;
+        }
+
+        [Test]
+        public void Should_have_pass_if_conditions_are_valid()
+        {
+            Assert.Fail();
+        }
     }
 }
