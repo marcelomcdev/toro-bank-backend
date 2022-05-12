@@ -31,4 +31,9 @@
     <Folder Include="Users\Queries\" />
   </ItemGroup>
 
+	
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

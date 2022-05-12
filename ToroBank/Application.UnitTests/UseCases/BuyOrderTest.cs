@@ -18,7 +18,8 @@ namespace Application.UnitTests.UseCases
         private UserAsset assetToSave;
         private decimal price, subtotal, balance;
         private User mockUser;
-
+        private PurchaseOrder purchaseOrder;
+        private List<UserAsset> AssetsPurchasedByUser;
 
         public class NegotiatedAssetItem
         {
@@ -42,7 +43,18 @@ namespace Application.UnitTests.UseCases
             public int Quantity { get; set; }
         }
 
-       
+
+        public class PurchaseOrder
+        {
+            public PurchaseOrder()
+            {
+                AcquiredAssets = new List<UserAsset>();
+            }
+            public User User { get; set; }
+            public List<UserAsset> AcquiredAssets { get; set; }
+        }
+
+        private PurchaseOrder mockPurchaseOrderWithAssets, mockPurchaseOrder;
 
         [SetUp]
         public void Setup()
@@ -50,9 +62,21 @@ namespace Application.UnitTests.UseCases
             mockUser = new User(123456, "João", "123123456452", 123.24M);
             mockUser.Id = 1;
 
+            AssetsPurchasedByUser = new List<UserAsset>()
+            {
+                new UserAsset(1,1,18),
+                new UserAsset(2,1,33),
+                new UserAsset(3,1,21),
+                new UserAsset(5,1,12)
+            };
+
+            mockPurchaseOrder = new PurchaseOrder() { User = mockUser };
+            mockPurchaseOrderWithAssets = new PurchaseOrder() { User = mockUser, AcquiredAssets = AssetsPurchasedByUser };
+
+
             mockNegotiatedAssets = new List<NegotiatedAssetItem>();
 
-            var mockAssetBase = new List<Asset>() {
+            mockAssetBase = new List<Asset>() {
                 new Asset{ Id =1, Name = "PETR4", Value = 28.44M },
                 new Asset{ Id =2, Name = "MGLU3", Value = 25.91M },
                 new Asset{ Id =3, Name = "VVAR3", Value = 25.91M },
@@ -113,21 +137,19 @@ namespace Application.UnitTests.UseCases
             return mostNegotiatedOrdered;
         }
 
+
         
-        private UserAsset ExecuteUseCase(User user, MostNegotiatedAssetItem selectedAsset, int quantity)
+        private void ExecuteUseCase(PurchaseOrder purchaseOrder, MostNegotiatedAssetItem selectedAsset, int quantity)
         {
-            userAssets = new List<UserAsset>();
+           // userAssets = new List<UserAsset>();
             assetToSave = null;
 
             ////3. Calcular o preço da ação vezes a quantidade e guardar o preço
-            
             price = selectedAsset.Asset.Value;
             subtotal = quantity * price;
 
-
             ////4. Verificar saldo disponível na conta do usuario
-            balance = user.Balance;
-
+            balance = purchaseOrder.User.Balance;
 
             ////5. Se o saldo for menor que R$122.31 - NÃO REALIZAR COMPRA
             if (balance < subtotal)
@@ -139,33 +161,29 @@ namespace Application.UnitTests.UseCases
             else
             {
                 ////6. Se o saldo for maior que R$122.31 - REALIZAR COMPRA
-                
-
                 //pesquisar ativos
-                assetToSave = userAssets.FirstOrDefault(f => f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
+                assetToSave = purchaseOrder.AcquiredAssets
+                                            .OrderBy(f=> f.LastModified)
+                                            .FirstOrDefault(f => f.UserId == purchaseOrder.User.Id && f.AssetId == selectedAsset.Asset.Id);
 
                 ////6.1. Registrar quantidades de ativos SANB11 ao cliente.
-
-                if (userAssets.Count() == 0)
+                if (assetToSave == null)
                 {
                     ////6.1.1. Se nao houver ativos, criar e adicionar valor.
-                    userAssets.Add(new UserAsset(selectedAsset.Asset.Id, user.Id, quantity));
-                    assetToSave = userAssets.FirstOrDefault(f => f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
+                    purchaseOrder.AcquiredAssets.Add(new UserAsset(selectedAsset.Asset.Id, purchaseOrder.User.Id, quantity));
+                    
+                    //userAssets.Add(new UserAsset(selectedAsset.Asset.Id, purchaseOrder.User.Id, quantity));
+                    //assetToSave = userAssets.FirstOrDefault(f => f.UserId == purchaseOrder.User.Id && f.AssetId == selectedAsset.Asset.Id);
                 }
                 else
                 {
-                    if (assetToSave != null)
-                    {
-                        ////6.1.2. Atualiza quantidade do ativo existente ao cliente.
-                        assetToSave.Quantity += quantity;
-                    }
+                    ////6.1.2. Atualiza quantidade do ativo existente ao cliente.
+                    assetToSave.Quantity += quantity;
                 }
 
                 ////6.2. Debitar o valor do saldo do cliente.
-                user.Balance -= subtotal;
+                purchaseOrder.User.Balance -= subtotal;
             }
-
-            return assetToSave;
         }
 
         /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
@@ -179,18 +197,17 @@ namespace Application.UnitTests.UseCases
             var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
             int quantity = 3;
 
-            Assert.DoesNotThrow(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
             Assert.IsNotNull(mockUser);
-            Assert.NotNull(assetToSave);
             Assert.GreaterOrEqual(mockUser.Balance, 0);
         }
 
         //deve passar se não houver erro. OK
         //se houver erro, retornar um InvalidOperationException - OK
-        //deve passar se o calculo da compra estiver correto. 
+        //deve passar se o calculo da compra estiver correto. - ok
         //se o saldo for acima do minimo para compra, deve registrar novas quantidades de ativos do sanbb ao cliente.
-        //se o saldo for acima do minimo para compra, saldo deve ser impactado após a finalização da compra.
-        //nao deve passar se o saldo do usuario for menor que o subtotal
+        //se o saldo for acima do minimo para compra, saldo deve ser impactado após a finalização da compra.- ok
+        //nao deve passar se o saldo do usuario for menor que o subtotal - ok
         //nao deve passar se o ativo selecionado for invalido: ex: selecionei o SANB11, mas veio TORO
         [Test]
         public void Should_pass_if_balance_is_updated_after_operation()
@@ -200,8 +217,35 @@ namespace Application.UnitTests.UseCases
             int quantity = 3;
 
             Assert.AreEqual(123.24M, mockUser.Balance);
-            Assert.DoesNotThrow(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
             Assert.Less(mockUser.Balance, 123.24M);
+        }
+
+        [Test]
+        public void Should_pass_if_the_asset_are_linked_to_the_customer_after_purchase()
+        {
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 3;
+
+            
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
+            Assert.NotNull(mockPurchaseOrder);
+            Assert.NotNull(mockPurchaseOrder.AcquiredAssets);
+            Assert.IsTrue(mockPurchaseOrder.AcquiredAssets.Where(f=> f.AssetId.Equals(mockAssetBase.Where(g=> g.Name.Equals("SANB11")).First().Id)).Any());
+        }
+
+        [Test]
+        public void Should_pass_if_the_asset_are_updated_in_customer_list_after_purchase()
+        {
+            Assert.Fail();
+        }
+
+
+        [Test]
+        public void Should_not_pass_if_the_selected_asset_is_invalid()
+        {
+            Assert.Fail();
         }
 
 
@@ -212,7 +256,7 @@ namespace Application.UnitTests.UseCases
             var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
             int quantity = 4;
             
-            Assert.Throws<InvalidOperationException>(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
+            Assert.Throws<InvalidOperationException>(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
         }
     }
 }

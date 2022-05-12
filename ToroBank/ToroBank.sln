@@ -15,19 +15,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{526E6818-711D-4C88-AF7D-92A263B4F058}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "Application.UnitTests\Application.UnitTests.csproj", "{90085A9D-EA04-48A8-A666-1CA0A5870D23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.UnitTests", "Application.UnitTests\Application.UnitTests.csproj", "{90085A9D-EA04-48A8-A666-1CA0A5870D23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "Domain.UnitTests\Domain.UnitTests.csproj", "{E6124593-2F1A-4D0B-B26D-BC2770E55D34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "Domain.UnitTests\Domain.UnitTests.csproj", "{E6124593-2F1A-4D0B-B26D-BC2770E55D34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Domain", "BankToro.Domain\ToroBank.Domain.csproj", "{82AF7B42-3568-4E13-A82A-2EF9AD106702}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToroBank.Domain", "BankToro.Domain\ToroBank.Domain.csproj", "{82AF7B42-3568-4E13-A82A-2EF9AD106702}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Infrastructure.Persistence", "ToroBank.Infrastructure\ToroBank.Infrastructure.Persistence.csproj", "{5D7F1C75-8131-4984-A979-785D958B3687}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToroBank.Infrastructure.Persistence", "ToroBank.Infrastructure\ToroBank.Infrastructure.Persistence.csproj", "{5D7F1C75-8131-4984-A979-785D958B3687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Application", "ToroBank.Application\ToroBank.Application.csproj", "{5F24B1FF-09D7-438E-A653-2809BB335347}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToroBank.Application", "ToroBank.Application\ToroBank.Application.csproj", "{5F24B1FF-09D7-438E-A653-2809BB335347}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.WebApi", "ToroBank.WebApi\ToroBank.WebApi.csproj", "{492AB2F7-D0A2-4CF1-BC81-958979385062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToroBank.WebApi", "ToroBank.WebApi\ToroBank.WebApi.csproj", "{492AB2F7-D0A2-4CF1-BC81-958979385062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToroBank.Infrastructure.Shared", "ToroBank.Infrastructure.Shared\ToroBank.Infrastructure.Shared.csproj", "{DDCA8631-3521-47E9-9568-693C0BE1B10B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToroBank.Infrastructure.Shared", "ToroBank.Infrastructure.Shared\ToroBank.Infrastructure.Shared.csproj", "{DDCA8631-3521-47E9-9568-693C0BE1B10B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0742531E-E481-44FE-B172-1EF8C5B57F1A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
