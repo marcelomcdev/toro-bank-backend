@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToroBank.Application.Common.DTOs.Assets;
 using ToroBank.Domain.Entities;
 
 namespace Application.UnitTests.UseCases
@@ -15,35 +16,6 @@ namespace Application.UnitTests.UseCases
         private decimal price, subtotal, balance;
         private User mockUser;
         private List<UserAsset> AssetsPurchasedByUser;
-
-
-        //logica de aplicação
-        public class NegotiatedAssetItem
-        {
-            public Guid Id { get; set; }
-            public int UserId { get; set; }
-            public Asset Asset { get; set; }
-            public int Quantity { get; set; }
-            public DateTime AcquiredAt { get; set; }
-        }
-
-        public class MostNegotiatedAssetItem
-        {
-            public Asset Asset { get; set; }
-            public int Quantity { get; set; }
-        }
-
-
-        //public class PurchaseOrder
-        //{
-        //    public PurchaseOrder()
-        //    {
-        //        AcquiredAssets = new List<UserAsset>();
-        //    }
-        //    public User User { get; set; }
-        //    public List<UserAsset> AcquiredAssets { get; set; }
-        //}
-
         private PurchaseOrder mockPurchaseOrderWithAssets, mockPurchaseOrder;
 
         [SetUp]
