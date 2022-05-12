@@ -31,6 +31,7 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
 
             RuleFor(p => p.Amount).GreaterThan(0).WithMessage("O valor da transferência deve ser maior que zero.");
 
+            RuleFor(p => _userRepository.GetByCPFAsync(p.Origin.CPF).Result).NotNull().WithMessage("O CPF de origem deve ser o mesmo do usuário que está recebendo a transferência!");
         }
     }
 }
