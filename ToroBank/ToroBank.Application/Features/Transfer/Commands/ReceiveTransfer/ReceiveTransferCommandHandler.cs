@@ -23,9 +23,6 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
         {
             var user = await _userRepository.GetByCPFAsync(request?.Origin?.CPF);
 
-            if (request.Amount == 0)
-                throw new System.ArgumentException("O valor transferido não é válido!");
-
             if (user == null)
                 throw new System.NullReferenceException("O CPF informado não consta em nossos registros!");
 
