@@ -11,12 +11,14 @@ namespace Application.UnitTests.UseCases
 {
     public class BuyOrderTest
     {
-        private List<Asset> assets;
-        //private List<NegotiatedAsset> mostNegotiatedAssets;
-
         private List<Asset> mockAssetBase;
         private List<NegotiatedAssetItem> mockNegotiatedAssets;
         private List<MostNegotiatedAssetItem> mockMostNegotiatedAssetsFroLastSevenDays;
+        private List<UserAsset> userAssets;
+        private UserAsset assetToSave;
+        private decimal price, subtotal, balance;
+        private User mockUser;
+
 
         public class NegotiatedAssetItem
         {
@@ -40,10 +42,14 @@ namespace Application.UnitTests.UseCases
             public int Quantity { get; set; }
         }
 
+       
 
         [SetUp]
         public void Setup()
         {
+            mockUser = new User(123456, "João", "123123456452", 123.24M);
+            mockUser.Id = 1;
+
             mockNegotiatedAssets = new List<NegotiatedAssetItem>();
 
             var mockAssetBase = new List<Asset>() {
@@ -107,33 +113,20 @@ namespace Application.UnitTests.UseCases
             return mostNegotiatedOrdered;
         }
 
-
-        [Test]
-        public void Should_have_pass_if_conditions_are_valid()
+        
+        private UserAsset ExecuteUseCase(User user, MostNegotiatedAssetItem selectedAsset, int quantity)
         {
-            /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
-             * pelo menos R$122.31 disponível em conta corrente e, em caso afirmativo, realizar a compra (debitar o saldo e registrar as novas quantidades de ativos SANB11 ao cliente). 
-             * Caso não tenha saldo suficiente, ou o ativo informado seja invalido, a API deve retornar uma codido e uma mensagem de erro indicando "saldo insuficiente" ou "ativo invalido". 
-             * Esta operação deve impactar o saldo e a lista de ativos do usuário.*/
-            UserAsset assetToSave = null;
-            var userAssets = new List<UserAsset>();
+            userAssets = new List<UserAsset>();
+            assetToSave = null;
 
-            //SIMULA OPERAÇÃO DA TELA DE LISTAGEM
-            var user = new User(123456, "João", "123123456452", 123.24M);
-            user.Id = 1;
-            ////1. Carregar uma lista com 5 itens mais negociados.
-            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
-            ////2. Selecionar um item: SANB11
-            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
-
-            //REGRA DE NEGOCIO DA COMPRA
             ////3. Calcular o preço da ação vezes a quantidade e guardar o preço
-            int quantity = 3;
-            var price = selectedAsset.Asset.Value;
-            var subtotal = quantity * price;
+            
+            price = selectedAsset.Asset.Value;
+            subtotal = quantity * price;
+
 
             ////4. Verificar saldo disponível na conta do usuario
-            var balance = user.Balance;
+            balance = user.Balance;
 
 
             ////5. Se o saldo for menor que R$122.31 - NÃO REALIZAR COMPRA
@@ -141,43 +134,73 @@ namespace Application.UnitTests.UseCases
             {
                 //nao realiza compra
                 ////5.1. retornar mensagem 'saldo insuficiente' para o usuario
-                
                 throw new InvalidOperationException("Saldo insuficiente!");
-                
             }
             else
             {
                 ////6. Se o saldo for maior que R$122.31 - REALIZAR COMPRA
-                ////6.1. Debitar o valor do saldo do cliente.
-                user.Balance -= subtotal;
+                
 
                 //pesquisar ativos
-                assetToSave = userAssets.FirstOrDefault(f=> f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
+                assetToSave = userAssets.FirstOrDefault(f => f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
 
-                ////6.2. Registrar quantidades de ativos SANB11 ao cliente.
-                
+                ////6.1. Registrar quantidades de ativos SANB11 ao cliente.
+
                 if (userAssets.Count() == 0)
                 {
-                    ////6.2.1. Se nao houver ativos, criar e adicionar valor.
+                    ////6.1.1. Se nao houver ativos, criar e adicionar valor.
                     userAssets.Add(new UserAsset(selectedAsset.Asset.Id, user.Id, quantity));
                     assetToSave = userAssets.FirstOrDefault(f => f.UserId == user.Id && f.AssetId == selectedAsset.Asset.Id);
                 }
                 else
                 {
-                    if(assetToSave != null)
+                    if (assetToSave != null)
                     {
-                        ////6.2.2. Atualiza quantidade do ativo existente ao cliente.
+                        ////6.1.2. Atualiza quantidade do ativo existente ao cliente.
                         assetToSave.Quantity += quantity;
                     }
                 }
+
+                ////6.2. Debitar o valor do saldo do cliente.
+                user.Balance -= subtotal;
             }
 
-            ///FIM DA REGRA DE NEGOCIO
+            return assetToSave;
+        }
 
-            Assert.IsNotNull(userAssets);
-            Assert.AreEqual(quantity, assetToSave.Quantity);
-            Assert.IsTrue(user.Balance > 0);
+        /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
+             * pelo menos R$122.31 disponível em conta corrente e, em caso afirmativo, realizar a compra (debitar o saldo e registrar as novas quantidades de ativos SANB11 ao cliente). 
+             * Caso não tenha saldo suficiente, ou o ativo informado seja invalido, a API deve retornar uma codido e uma mensagem de erro indicando "saldo insuficiente" ou "ativo invalido". 
+             * Esta operação deve impactar o saldo e a lista de ativos do usuário.*/
+        [Test]
+        public void Should_pass_if_conditions_are_valid()
+        {
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 3;
 
+            Assert.DoesNotThrow(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
+            Assert.IsNotNull(mockUser);
+            Assert.NotNull(assetToSave);
+            Assert.GreaterOrEqual(mockUser.Balance, 0);
+        }
+
+        //deve passar se não houver erro. OK
+        //se houver erro, retornar um InvalidOperationException - OK
+        //deve passar se o calculo da compra estiver correto. 
+        //se o saldo for acima do minimo para compra, deve registrar novas quantidades de ativos do sanbb ao cliente.
+        //se o saldo for acima do minimo para compra, saldo deve ser impactado após a finalização da compra.
+        //nao deve passar se o saldo do usuario for menor que o subtotal
+        //nao deve passar se o ativo selecionado for invalido: ex: selecionei o SANB11, mas veio TORO
+
+        [Test]
+        public void Should_have_error_if_balance_is_insuficient()
+        {
+            var mostNegotiated = mockMostNegotiatedAssetsFroLastSevenDays;
+            var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
+            int quantity = 4;
+            
+            Assert.Throws<InvalidOperationException>(() => ExecuteUseCase(mockUser, selectedAsset, quantity));
         }
     }
 }
