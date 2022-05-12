@@ -1,17 +1,12 @@
 ﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ToroBank.Application.Common.Wrappers;
 using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer;
 using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer.Objects;
 using ToroBank.Application.Features.Users;
 using ToroBank.Domain.Entities;
-using ToroBank.Infrastructure.Persistence.Repositories;
 
 namespace Application.UnitTests.UseCases
 {
@@ -63,18 +58,16 @@ namespace Application.UnitTests.UseCases
         [Test]
         public void Should_pass_when_transfer_is_valid()
         {
-            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
-            var result = handler.Handle(sut, _ct).Result;
-
             sut.Should().NotBeNull();
             sut.Event.Should().NotBeNull();
             sut.Event.Should().NotBeEmpty();
-
             sut.Origin.CPF.Should().NotBeNull();
             sut.Origin.CPF.Should().Match(mockUser.CPF);
-
             sut.Amount.Should().NotBe(0);
 
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
+            
             mockUser.Balance.Should().Be(1350);
         }
 
@@ -91,38 +84,21 @@ namespace Application.UnitTests.UseCases
         public void Should_pass_if_origin_cpf_is_eq_user_cpf()
         {
             mockUser = new User(300123, "Marcelo Martins de Castro", "45358996060", 350);
-            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
-            var result = handler.Handle(sut, _ct).Result;
 
             sut.Origin.CPF.Should().Match(mockUser.CPF);
+
+            var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
+            var result = handler.Handle(sut, _ct).Result;
         }
 
         [Test]
         public void Should_pass_if_event_is_transfer()
         {
+            sut.Event.Should().Match("TRANSFER");
 
             var handler = new ReceiveTransferCommandHandler(mockUserRepository.Object);
             var result = handler.Handle(sut, _ct).Result;
-
-            sut.Event.Should().Match("TRANSFER");
         }
-
-        [Test]
-        public void Should_have_error_if_event_is_different_of_transfer()
-        {
-            sut.Event = "DEPOSIT";
-
-            Assert.Throws<AggregateException>(()=> ExecuteHandler());
-            sut.Event.Should().NotMatch("TRANSFER");
-        }
-
-
-
     }
-
-
-
-
-
 
 }
