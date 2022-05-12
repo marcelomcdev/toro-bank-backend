@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ToroBank.Application.Common.Exceptions.Constants;
 using ToroBank.Application.Features.Users;
 
@@ -14,13 +9,14 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
         private readonly IUserRepository _userRepository;
         public ReceiveTransferCommandValidator(IUserRepository _userRepository)
         {
-            string errorPropertyNull = ErrorMessage.ErrorPropertyNull; // "A propriedade {PropertyName} não pode ser nula.";
-            string errorPropertyEmpty = ErrorMessage.ErrorPropertyEmpty; //"A propriedade {PropertyName} não pode ser vazia.";
+            string errorPropertyNull = ErrorMessage.ErrorPropertyNull;
+            string errorPropertyEmpty = ErrorMessage.ErrorPropertyEmpty;
 
             RuleFor(p => p).NotEmpty().WithMessage(errorPropertyEmpty).NotNull().WithMessage(errorPropertyNull);
-            RuleFor(p => p.Event).NotEmpty().WithMessage("{PropertyName} é obrigatório.").NotNull().Equals("TRANSFER");
-            
-            
+            RuleFor(p => p.Event).NotEmpty().WithMessage("{PropertyName} é obrigatório.").NotNull();
+            RuleFor(p => p.Event).Matches("^TRANSFER$").WithMessage("{PropertyName} não possui um valor válido.");
+
+
             RuleFor(p => p.Origin).NotEmpty().WithMessage(errorPropertyEmpty).NotNull().WithMessage(errorPropertyNull);
 
             RuleFor(p => p.Origin).NotNull().WithMessage(errorPropertyNull);

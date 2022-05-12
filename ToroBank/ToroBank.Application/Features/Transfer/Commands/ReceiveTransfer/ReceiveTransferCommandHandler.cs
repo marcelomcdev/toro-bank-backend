@@ -23,12 +23,6 @@ namespace ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer
         {
             var user = await _userRepository.GetByCPFAsync(request?.Origin?.CPF);
 
-            //if (request == null || request?.Target == null || request?.Origin == null)
-            //    throw new System.NullReferenceException("Transação inválida!");
-
-            if (request.Event != null && !request.Event.ToUpper().Equals("TRANSFER"))
-                throw new System.ArgumentException("Operação inválida!");
-
             if (request.Amount == 0)
                 throw new System.ArgumentException("O valor transferido não é válido!");
 
