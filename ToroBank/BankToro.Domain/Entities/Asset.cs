@@ -11,6 +11,13 @@ namespace ToroBank.Domain.Entities
             Value = value;
         }
 
+        public Asset(int id, string? name, decimal value)
+        {
+            Id = id;
+            Name = name;
+            Value = value;
+        }
+
         public override int Id { get; set; }
         public string? Name { get; set; }
         public decimal Value { get; set; }

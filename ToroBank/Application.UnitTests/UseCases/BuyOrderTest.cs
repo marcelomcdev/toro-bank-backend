@@ -16,6 +16,8 @@ namespace Application.UnitTests.UseCases
         private User mockUser;
         private List<UserAsset> AssetsPurchasedByUser;
 
+
+        //logica de aplicação
         public class NegotiatedAssetItem
         {
             public Guid Id { get; set; }
@@ -25,13 +27,6 @@ namespace Application.UnitTests.UseCases
             public DateTime AcquiredAt { get; set; }
         }
 
-        public class Asset
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public decimal Value { get; set; }
-        }
-
         public class MostNegotiatedAssetItem
         {
             public Asset Asset { get; set; }
@@ -39,15 +34,15 @@ namespace Application.UnitTests.UseCases
         }
 
 
-        public class PurchaseOrder
-        {
-            public PurchaseOrder()
-            {
-                AcquiredAssets = new List<UserAsset>();
-            }
-            public User User { get; set; }
-            public List<UserAsset> AcquiredAssets { get; set; }
-        }
+        //public class PurchaseOrder
+        //{
+        //    public PurchaseOrder()
+        //    {
+        //        AcquiredAssets = new List<UserAsset>();
+        //    }
+        //    public User User { get; set; }
+        //    public List<UserAsset> AcquiredAssets { get; set; }
+        //}
 
         private PurchaseOrder mockPurchaseOrderWithAssets, mockPurchaseOrder;
 
@@ -70,11 +65,11 @@ namespace Application.UnitTests.UseCases
             mockNegotiatedAssets = new List<NegotiatedAssetItem>();
 
             mockAssetBase = new List<Asset>() {
-                new Asset{ Id =1, Name = "PETR4", Value = 28.44M },
-                new Asset{ Id =2, Name = "MGLU3", Value = 25.91M },
-                new Asset{ Id =3, Name = "VVAR3", Value = 25.91M },
-                new Asset{ Id =4, Name = "SANB11", Value = 40.77M },
-                new Asset{ Id =5, Name = "TORO4", Value = 115.98M },
+                new Asset(1, "PETR4", 28.44M ),
+                new Asset(2, "MGLU3", 25.91M ),
+                new Asset(3, "VVAR3", 25.91M ),
+                new Asset(4, "SANB11", 40.77M ),
+                new Asset(5, "TORO4", 115.98M ),
             };
 
             Random rndQuantity = new Random(30);
@@ -140,6 +135,7 @@ namespace Application.UnitTests.UseCases
                     assetToSave.Quantity += quantity;
                 }
                 purchaseOrder.User.Balance -= subtotal;
+                purchaseOrder.Id++;
             }
         }
 
@@ -154,12 +150,14 @@ namespace Application.UnitTests.UseCases
             var selectedAsset = mostNegotiated.FirstOrDefault(a => a.Asset.Name == "SANB11");
             int quantity = 3;
 
+            Assert.Zero(mockPurchaseOrder.Id);
             Assert.NotNull(mockPurchaseOrder);
             Assert.NotNull(mockPurchaseOrder.User);
             Assert.NotNull(mockNegotiatedAssets);
             Assert.DoesNotThrow(() => ExecuteUseCase(mockPurchaseOrder, selectedAsset, quantity));
             Assert.IsNotNull(mockUser);
             Assert.GreaterOrEqual(mockUser.Balance, 0);
+            Assert.NotZero(mockPurchaseOrder.Id);
         }
 
 
