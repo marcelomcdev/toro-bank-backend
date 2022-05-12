@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,137 +12,91 @@ namespace Application.UnitTests.UseCases
     public class BuyOrderTest
     {
         private List<Asset> assets;
-        private List<NegotiatedAsset> mostNegotiatedAssets;
+        //private List<NegotiatedAsset> mostNegotiatedAssets;
+
+        private List<Asset> mockAssetBase;
+        private List<NegotiatedAssetItem> mockNegotiatedAssets;
+        private List<MostNegotiatedAssetItem> mockMostNegotiatedAssetsFroLastSevenDays;
+
+        public class NegotiatedAssetItem
+        {
+            public Guid Id { get; set; }
+            public int UserId { get; set; }
+            public Asset Asset { get; set; }
+            public int Quantity { get; set; }
+            public DateTime AcquiredAt { get; set; }
+        }
+
+        public class Asset
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public decimal Value { get; set; }
+        }
+
+        public class MostNegotiatedAssetItem
+        {
+            public Asset Asset { get; set; }
+            public int Quantity { get; set; }
+        }
+
 
         [SetUp]
         public void Setup()
         {
-            assets = new List<Asset>()
-            {
-                new Asset("PETR4",28.44M),
-                new Asset("MGLU3",28.44M),
-                new Asset("VVAR3",25.91M),
-                new Asset("SANB11",25.91M),
-                new Asset("TORO4",115.98M),
+            mockNegotiatedAssets = new List<NegotiatedAssetItem>();
+
+            var mockAssetBase = new List<Asset>() {
+                new Asset{ Id =1, Name = "PETR4", Value = 28.44M },
+                new Asset{ Id =2, Name = "MGLU3", Value = 28.44M },
+                new Asset{ Id =3, Name = "VVAR3", Value = 25.91M },
+                new Asset{ Id =4, Name = "SANB11", Value = 25.91M },
+                new Asset{ Id =5, Name = "TORO4", Value = 115.98M },
             };
 
-            List<NegotiatedAsset> negotiatedAssets = new List<NegotiatedAsset>();
-            Random rng = new Random();
-            
+            //Random values
+            Random rndQuantity = new Random(30);
+            Random rndUser = new Random(7);
+            Random rndAsset = new Random(5);
+            Random rndDate = new Random();
+
+            DateTime start = DateTime.Now.AddDays(-7);
+            int range = (DateTime.Today - start).Days;
+
             for (int i = 0; i < 100; i++)
             {
-                Random random = new Random(0);
-                int index = rng.Next(assets.Count);
-                int idx = rng.Next(100);
-                negotiatedAssets.Add(new NegotiatedAsset()
+                int assetId = rndAsset.Next(1, 6);
+                if (mockAssetBase.Any(f => f.Id == assetId))
                 {
-                    Asset = assets[index],
-                    Total = idx
-                });
+                    mockNegotiatedAssets.Add(new NegotiatedAssetItem { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == assetId), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                }
             }
 
-            var teste = negotiatedAssets.ToList();
-            var group = teste.GroupBy(a => a.Asset.Name);
-            
-            mostNegotiatedAssets = new List<NegotiatedAsset>();
-            foreach (var item in group)
+            //validation: if one or more assets was not added in list, add a registry
+            for (int i = 1; i <= 5; i++)
             {
-                mostNegotiatedAssets.Add(new NegotiatedAsset() { Asset = new Asset(item.Key, 0), Total = item.Count() });
+                if (mockNegotiatedAssets.Count(f => f.Asset.Id == i) == 0)
+                {
+                    mockNegotiatedAssets.Add(new NegotiatedAssetItem { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == i), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                }
             }
+
+            mockMostNegotiatedAssetsFroLastSevenDays = (from x in mockNegotiatedAssets
+                                                            .Where(f => f.AcquiredAt >= DateTime.Now.AddDays(-7).Date && f.AcquiredAt <= DateTime.Now.Date)
+                                                            .GroupBy(f => f.Asset)
+                                         select new MostNegotiatedAssetItem { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
+                                                            .OrderByDescending(f => f.Quantity).ToList();
+            
         }
+       
 
         [Test]
-        public void Should_have_a_list_of_5_assets()
+        public void Should_have_only_5_most_negotiated_assets_from_last_7_days()
         {
-            Assert.IsTrue(mostNegotiatedAssets.Count() == 5);
+            Assert.IsNotNull(mockMostNegotiatedAssetsFroLastSevenDays);
+            Assert.IsTrue(mockMostNegotiatedAssetsFroLastSevenDays.Count() == 5);
         }
 
-        public void OrdemDeCompra()
-        {
-            /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
-             * pelo menos R$122.31 disponível em conta corrente e, em caso afirmativo, realizar a compra (debitar o saldo e registrar as novas quantidades de ativos SANB11 ao cliente). 
-             * Caso não tenha saldo suficiente, ou o ativo informado seja invalido, a API deve retornar uma codido e uma mensagem de erro indicando "saldo insuficiente" ou "ativo invalido". 
-             * Esta operação deve impactar o saldo e a lista de ativos do usuário.*/
-
-            var user = new User(123456, "João", "123123456452", 123.24M);
-            var userAssets = new List<UserAsset>();
-
-            //1. Carregar uma lista com 5 itens mais negociados.
-            var mostNegotiated = mostNegotiatedAssets.Take(5);
-            //2. Selecionar um item: SANB11
-            var sanb = mostNegotiated.Where(a => a.Asset.Name == "SANB11").FirstOrDefault();
-            //3. Calcular o preço da ação vezes a quantidade e guardar o preço
-            int quantity = 3;
-            var price = sanb.Asset.Value;
-            var subtotal = quantity * price;
-            //4. Verificar saldo disponível na conta do usuario
-            var balance = user.Balance;
-            //5. Se o saldo for menor que R$122.31 - NÃO REALIZAR COMPRA
-            if(balance < subtotal)
-            {
-                //nao realiza compra
-            }
-            else
-            {
-                balance -= subtotal;
-                user.Balance = balance;
-
-                userAssets.Add(new UserAsset(4, 0));
-
-
-            }
-            //5.1. retornar mensagem 'saldo insuficiente' para o usuario
-            //6. Se o saldo for maior que R$122.31 - REALIZAR COMPRA
-            //6.1. Debitar o valor do saldo do cliente.
-            //6.2. Registrar quantidades de ativos SANB11 ao cliente.
-            //6.2.2. Se nao houver ativos, criar e adicionar valor.
-        }
-
-        public void Should_have_an_valid_user()
-        {
-            Assert.Fail();
-        }
-
-        public void Should_pass_if_asset_value_is_not_eq_0()
-        {
-            Assert.Fail();
-        }
-
-        public void Should_pass_if_users_balance_is_gt_order_value()
-        {
-            Assert.Fail();
-        }
-
-        public void Should_not_pass_if_users_balance_is_insuficient()
-        {
-            Assert.Fail();
-        }
-
-        public void Should_have_error_if_balance_of_client_is_lt_0()
-        {
-            Assert.Fail();
-        }
-
-
-
-        public class NegotiatedAsset
-        {
-            private int v;
-
-            public NegotiatedAsset()
-            {
-            }
-
-            public NegotiatedAsset(Asset asset, int v)
-            {
-                Asset = asset;
-                this.v = v;
-            }
-
-            public Asset Asset { get; set; }
-            public int Total { get; set; }
-        }
-
-
+        
     }
 }
