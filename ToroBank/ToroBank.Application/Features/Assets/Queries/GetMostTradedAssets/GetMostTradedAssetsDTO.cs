@@ -1,0 +1,16 @@
+﻿using ToroBank.Application.Common.DTOs.Assets;
+using ToroBank.Domain.Entities;
+
+namespace ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets
+{
+    public record GetMostTradedAssetsDTO(
+        Asset Asset,
+        int Quantity
+        )
+    {
+        public static GetMostTradedAssetsDTO ToDTO(MostNegotiatedAsset mna)
+        {
+            return new GetMostTradedAssetsDTO(mna.Asset, mna.Quantity);
+        }
+    }
+}

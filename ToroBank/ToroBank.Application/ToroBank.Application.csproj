@@ -20,7 +20,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\Assets\Commands\" />
-	  <Folder Include="Features\Assets\Queries\GetMostTradedAssetsInLastSevenDays\" />
 	  <Folder Include="Features\Transfer\Queries\" />
 	  <Folder Include="Features\UserAssets\Commands\CreateUserAsset\" />
 	  <Folder Include="Features\UserAssets\Queries\GetAssetsFromUser\" />
