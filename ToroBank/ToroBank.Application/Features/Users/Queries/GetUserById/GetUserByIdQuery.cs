@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using ToroBank.Application.Common.Wrappers;
-using ToroBank.Domain.Entities;
 
 namespace ToroBank.Application.Features.Users.Queries.GetUserById
 {
-    public class GetUserByIdCommand : IRequest<Result<User>>
+    public class GetUserByIdQuery : IRequest<Result<GetUserByIdDTO>>
     {
         public int Id { get; set; }
     }

@@ -63,9 +63,5 @@
 	  <ProjectReference Include="..\ToroBank.Infrastructure\ToroBank.Infrastructure.Persistence.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Helpers\" />
-	</ItemGroup>
-
 
 </Project>
