@@ -3,7 +3,8 @@
 namespace ToroBank.WebApi.Helpers
 {
     [Route("[controller]")]
-    public class MainController : ControllerBase
+    [ApiController]
+    public abstract class MainController : ControllerBase
     {
     }
 }
