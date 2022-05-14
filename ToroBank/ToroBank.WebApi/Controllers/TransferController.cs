@@ -32,7 +32,7 @@ namespace ToroBank.WebApi.Controllers
         {
 
             var response = await _mediator.Send(cmd);
-            return Created($"/api/[controller]/{response.Data}", null);
+            return Created($"/[controller]/{response.Data}", null);
         }
     }
 }
