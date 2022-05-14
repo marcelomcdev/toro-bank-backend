@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToroBank.Application.Common.DTOs.Assets;
 using ToroBank.Application.Common.Wrappers;
 using ToroBank.Application.Features.Assets;
 using ToroBank.Domain.Entities;
@@ -15,7 +14,7 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
             _assets = dbContext.Set<Asset>();
         }
 
-        public async Task<PagedResponse<MostNegotiatedAsset>> GetMostNegotiatedAsset(int pageNumber, int pageSize)
+        public async Task<PagedResponse<NegotiatedAsset>> GetMostNegotiatedAsset(int pageNumber, int pageSize)
         {
             var mockNegotiatedAssets = new List<NegotiatedAsset>();
 
@@ -55,7 +54,7 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
             var mostNegotiatedAssetsFroLastSevenDays = (from x in mockNegotiatedAssets
                                                             .Where(f => f.AcquiredAt >= DateTime.Now.AddDays(-7).Date && f.AcquiredAt <= DateTime.Now.Date)
                                                             .GroupBy(f => f.Asset)
-                                                        select new MostNegotiatedAsset { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
+                                                        select new NegotiatedAsset { Asset = x.First().Asset, Quantity = x.Sum(f => f.Quantity) })
                                                             .OrderByDescending(f => f.Quantity).ToList();
 
             int totalCount = mostNegotiatedAssetsFroLastSevenDays.Count;
@@ -66,7 +65,7 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
                 .Take(pageSize)
                 .ToList();
 
-            return new PagedResponse<MostNegotiatedAsset>(pageNumber, pageSize, totalCount, data);
+            return new PagedResponse<NegotiatedAsset>(pageNumber, pageSize, totalCount, data);
         }
     }
 }

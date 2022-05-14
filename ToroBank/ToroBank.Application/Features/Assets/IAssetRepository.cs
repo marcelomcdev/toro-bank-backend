@@ -12,6 +12,6 @@ namespace ToroBank.Application.Features.Assets
 {
     public interface IAssetRepository : IGenericRepository<Asset, int>
     {
-        Task<PagedResponse<MostNegotiatedAsset>> GetMostNegotiatedAsset(int pageNumber, int pageSize);
+        Task<PagedResponse<NegotiatedAsset>> GetMostNegotiatedAsset(int pageNumber, int pageSize);
     }
 }

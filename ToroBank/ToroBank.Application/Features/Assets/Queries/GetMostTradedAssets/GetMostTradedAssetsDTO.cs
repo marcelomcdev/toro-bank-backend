@@ -8,7 +8,7 @@ namespace ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets
         int Quantity
         )
     {
-        public static GetMostTradedAssetsDTO ToDTO(MostNegotiatedAsset mna)
+        public static GetMostTradedAssetsDTO ToDTO(NegotiatedAsset mna)
         {
             return new GetMostTradedAssetsDTO(mna.Asset, mna.Quantity);
         }

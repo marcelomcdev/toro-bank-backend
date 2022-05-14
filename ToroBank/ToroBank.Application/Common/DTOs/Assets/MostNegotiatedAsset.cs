@@ -7,9 +7,9 @@ using ToroBank.Domain.Entities;
 
 namespace ToroBank.Application.Common.DTOs.Assets
 {
-    public class MostNegotiatedAsset
-    {
-        public Asset Asset { get; set; }
-        public int Quantity { get; set; }
-    }
+    //public class MostNegotiatedAsset
+    //{
+    //    public Asset Asset { get; set; }
+    //    public int Quantity { get; set; }
+    //}
 }

@@ -24,7 +24,6 @@
 	  <Folder Include="Features\UserAssets\Commands\CreateUserAsset\" />
 	  <Folder Include="Features\UserAssets\Queries\GetAssetsFromUser\" />
 	  <Folder Include="Features\Users\Commands\UpdateUserBalance\" />
-	  <Folder Include="Features\Users\Queries\GetUserByCpf\" />
 	</ItemGroup>
 	
 </Project>
