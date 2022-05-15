@@ -63,6 +63,8 @@ namespace ToroBank.WebApi.Extensions
 
             app.UseHealthChecksExtension();
 
+            
+
             //In the future, if toro app will have an auth page, uncomment this line to require auth in endpoints. 
             app.MapControllers();//.RequireAuthorization(); 
         }
