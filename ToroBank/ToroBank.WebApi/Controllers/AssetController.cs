@@ -17,7 +17,7 @@ namespace ToroBank.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost()]
+        [HttpPost("mostnegotiated")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] GetMostTradedAssetsQuery cmd)
