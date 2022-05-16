@@ -19,11 +19,11 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
             var mockNegotiatedAssets = new List<NegotiatedAsset>();
 
             var mockAssetBase = new List<Asset>() {
-                new Asset(1, "PETR4", 28.44M ),
-                new Asset(2, "MGLU3", 25.91M ),
-                new Asset(3, "VVAR3", 25.91M ),
-                new Asset(4, "SANB11", 40.77M ),
-                new Asset(5, "TORO4", 115.98M ),
+                new Asset(1, "PETR4", 28.44M, "petrobras.png" ),
+                new Asset(2, "MGLU3", 25.91M, "magalu.png" ),
+                new Asset(3, "VVAR3", 25.91M, "viavarejo.png" ),
+                new Asset(4, "SANB11", 40.77M , "santander.png"),
+                new Asset(5, "TORO4", 115.98M , "toro.png"),
             };
 
             Random rndQuantity = new Random(30);
