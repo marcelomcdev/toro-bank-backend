@@ -14,17 +14,16 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
             _assets = dbContext.Set<Asset>();
         }
 
+        public async Task<Asset?> GetAssetBySymbol(string symbol)
+        {
+            return await _assets.Where(f => f.Name == symbol).FirstOrDefaultAsync();
+        }
+
         public async Task<PagedResponse<NegotiatedAsset>> GetMostNegotiatedAsset(int pageNumber, int pageSize)
         {
             var mockNegotiatedAssets = new List<NegotiatedAsset>();
 
-            var mockAssetBase = new List<Asset>() {
-                new Asset(1, "PETR4", 28.44M, "petrobras.png" ),
-                new Asset(2, "MGLU3", 25.91M, "magalu.png" ),
-                new Asset(3, "VVAR3", 25.91M, "viavarejo.png" ),
-                new Asset(4, "SANB11", 40.77M , "santander.png"),
-                new Asset(5, "TORO4", 115.98M , "toro.png"),
-            };
+            List<Asset> mockAssetBase = _assets.ToList();
 
             Random rndQuantity = new Random(30);
             Random rndUser = new Random(7);
@@ -39,7 +38,11 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
                 int assetId = rndAsset.Next(1, 6);
                 if (mockAssetBase.Any(f => f.Id == assetId))
                 {
-                    mockNegotiatedAssets.Add(new NegotiatedAsset { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == assetId), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                    mockNegotiatedAssets.Add(new NegotiatedAsset { 
+                        Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), 
+                        Asset = mockAssetBase.FirstOrDefault(f => f.Id == assetId),
+                        Quantity = rndQuantity.Next(1, 30), 
+                        AcquiredAt = start.AddDays(rndDate.Next(range)) });
                 }
             }
 
@@ -47,7 +50,11 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
             {
                 if (mockNegotiatedAssets.Count(f => f.Asset.Id == i) == 0)
                 {
-                    mockNegotiatedAssets.Add(new NegotiatedAsset { Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), Asset = mockAssetBase.FirstOrDefault(f => f.Id == i), Quantity = rndQuantity.Next(1, 30), AcquiredAt = start.AddDays(rndDate.Next(range)) });
+                    mockNegotiatedAssets.Add(new NegotiatedAsset { 
+                        Id = Guid.NewGuid(), UserId = rndUser.Next(1, 7), 
+                        Asset = mockAssetBase.FirstOrDefault(f => f.Id == i), 
+                        Quantity = rndQuantity.Next(1, 30),
+                        AcquiredAt = start.AddDays(rndDate.Next(range)) });
                 }
             }
 
