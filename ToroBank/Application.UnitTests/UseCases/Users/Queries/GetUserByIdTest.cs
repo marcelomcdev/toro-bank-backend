@@ -25,11 +25,8 @@ namespace Application.UnitTests.UseCases.Queries
         {
             mockUser = new User(300123, "Marcelo", "45358996060", 350);
             mockUserRepository = new Mock<IUserRepository>();
-
             _mockUserDto = new GetUserByIdDTO(0, 300123, "Marcelo", "45358996060", 350);
             mockUserRepository.Setup(repo => repo.GetByIdAsync(It.IsNotIn(new int[] { 0 }))).Returns(Task.FromResult(mockUser));
-
-            
             sut = new GetUserByIdQuery();
             sut.Id = 1;
         }
