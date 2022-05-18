@@ -15,6 +15,6 @@ namespace ToroBank.Domain.Entities
         public int AssetId { get; set; }
         public int UserId { get; set; }
         public int Quantity { get; set; }
-
+        public virtual Asset Asset { get; set; }
     }
 }
