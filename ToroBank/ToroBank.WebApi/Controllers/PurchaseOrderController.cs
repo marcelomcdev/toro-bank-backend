@@ -19,6 +19,11 @@ namespace ToroBank.WebApi.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Makes the purchase order for a chosen asset and processes the balance and inclusion of a new asset in the customer's list.
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -17,20 +17,7 @@ namespace ToroBank.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("trends")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] GetMostTradedAssetsQuery cmd)
-        {
-            var response = await _mediator.Send(cmd);
-            List<dynamic> l = new List<dynamic>();
-            response.Data.Data.ToList()
-                .ForEach(response => l.Add(new { 
-                    symbol = response.Asset.Name, 
-                    currentPrice = response.Asset.Value 
-                } ));
-            return Ok(l);
-        }
+       
 
         
     }

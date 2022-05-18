@@ -18,10 +18,15 @@ namespace ToroBank.WebApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost()]
+        /// <summary>
+        /// Get the list of the 5 most traded assets available for purchase
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        [HttpGet()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] GetMostTradedAssetsQuery cmd)
+        public async Task<IActionResult> Get([FromBody] GetMostTradedAssetsQuery cmd)
         {
             var response = await _mediator.Send(cmd);
             List<dynamic> l = new List<dynamic>();
@@ -33,7 +38,6 @@ namespace ToroBank.WebApi.Controllers
                     image = response.Asset.ImageName
                 } ));
             return Ok(l);
-            //return Ok(response.Data);
         }
 
         
