@@ -1,17 +1,15 @@
-﻿using MediatR;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ToroBank.Application.Common.Exceptions;
-using ToroBank.Application.Common.Wrappers;
 using ToroBank.Application.Features.Assets;
+using ToroBank.Application.Features.Positions.Queries;
 using ToroBank.Application.Features.UserAssets;
 using ToroBank.Application.Features.Users;
 using ToroBank.Domain.Entities;
-using static Application.UnitTests.UseCases.Positions.Queries.Test.GetUserPositionDTO;
 
 namespace Application.UnitTests.UseCases.Positions.Queries
 {
@@ -62,7 +60,6 @@ namespace Application.UnitTests.UseCases.Positions.Queries
 
             sut = new GetUserPositionQuery();
             sut.Id = 1;
-
         }
 
 
@@ -119,96 +116,6 @@ namespace Application.UnitTests.UseCases.Positions.Queries
 
 
     }
-
-
+  
     
-    
-}
-
-
-
-
-
-namespace Application.UnitTests.UseCases.Positions.Queries.Test
-{
-    public record GetUserPositionDTO(
-    List<Position> Positions, decimal CheckingAccountAmount, decimal Consolidated)
-    {
-        public static GetUserPositionDTO ToDto(UserPosition userPosition)
-        {
-            return new GetUserPositionDTO(
-                userPosition.Positions,
-                userPosition.CheckingAccountAmount,
-                userPosition.Consolidated
-                );
-        }
-
-        public class GetUserPositionQuery : IRequest<Result<GetUserPositionDTO>>
-        {
-            public int Id { get; set; }
-        }
-
-
-        public class GetUserPositionQueryHandler : IRequestHandler<GetUserPositionQuery, Result<GetUserPositionDTO>>
-        {
-            private readonly IUserRepository _userRepository;
-            private readonly IAssetRepository _assetRepository;
-            private readonly IUserAssetRepository _userAssetRepository;
-
-            public GetUserPositionQueryHandler(IUserRepository userRepository, IAssetRepository assetRepository, IUserAssetRepository userAssetRepository)
-            {
-                _userRepository = userRepository;
-                _assetRepository = assetRepository;
-                _userAssetRepository = userAssetRepository;
-            }
-
-            public async Task<Result<GetUserPositionDTO>> Handle(GetUserPositionQuery query, CancellationToken cancellationToken)
-            {
-                var user = await _userRepository.GetByIdAsync(query.Id);
-                if (user == null)
-                {
-                    throw new NotFoundException(nameof(User), query.Id);
-                }
-
-                var assets = await _assetRepository.GetAllAsync();
-                var assetsOfUser = _userAssetRepository.GetAllAsync().Result.Where(f=> f.Id == user.Id).ToList();
-
-                UserPosition up = new UserPosition();
-                assetsOfUser.ForEach(f => up.Positions.Add(new Position() {
-                    Amount = f.Quantity,
-                    Symbol = assets.FirstOrDefault(g=> g.Id == f.AssetId)?.Name ?? "",
-                    CurrentPrice = assets.FirstOrDefault(g => g.Id == f.AssetId)?.Value ?? 0
-                }));
-
-                up.CheckingAccountAmount = user.Balance;
-                assetsOfUser.ForEach(f => up.Consolidated += ((f.Quantity * assets.FirstOrDefault(e => e.Id == f.AssetId)?.Value ?? 0)));
-                up.Consolidated += up.CheckingAccountAmount;
-
-                var dto = GetUserPositionDTO.ToDto(up);
-
-                return Result.Ok(dto);
-            }
-        }
-
-
-        public class UserPosition
-        {
-            public decimal CheckingAccountAmount { get; set; }
-            public decimal Consolidated { get; set; }
-            public List<Position> Positions { get; set; }
-            public UserPosition()
-            {
-                Positions = new List<Position>();
-            }
-        }
-
-        public class Position
-        {
-            public string Symbol { get; set; }
-            public int Amount { get; set; }
-            public decimal CurrentPrice { get; set; }
-        }
-
-
-    }
 }
