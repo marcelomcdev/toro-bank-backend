@@ -26,9 +26,9 @@ namespace ToroBank.WebApi.Controllers
         [HttpGet()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromBody] GetMostTradedAssetsQuery cmd)
+        public async Task<IActionResult> Get()
         {
-            var response = await _mediator.Send(cmd);
+            var response = await _mediator.Send(new GetMostTradedAssetsQuery());
             List<dynamic> l = new List<dynamic>();
             response.Data.Data.ToList()
                 .ForEach(response => l.Add(new { 
