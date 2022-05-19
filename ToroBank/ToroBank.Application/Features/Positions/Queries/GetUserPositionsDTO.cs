@@ -10,7 +10,8 @@ namespace ToroBank.Application.Features.Positions.Queries
     public record GetUserPositionDTO(
         List<Position> Positions,
         decimal CheckingAccountAmount,
-        decimal Consolidated
+        decimal Consolidated,
+        decimal Investments
         )
     {
         public static GetUserPositionDTO ToDto(UserPosition userPosition)
@@ -18,7 +19,8 @@ namespace ToroBank.Application.Features.Positions.Queries
             return new GetUserPositionDTO(
            userPosition.Positions,
            userPosition.CheckingAccountAmount,
-           userPosition.Consolidated
+           userPosition.Consolidated,
+           userPosition.Investments
            );
         }
     }
