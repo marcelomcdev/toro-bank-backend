@@ -1,7 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using ToroBank.Application.Features.Assets;
-using ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets;
 using ToroBank.WebApi.Helpers;
 
 namespace ToroBank.WebApi.Controllers
@@ -16,9 +14,5 @@ namespace ToroBank.WebApi.Controllers
             _userRepository = userRepository;
             _mediator = mediator;
         }
-
-       
-
-        
     }
 }

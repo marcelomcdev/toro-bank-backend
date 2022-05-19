@@ -1,12 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToroBank.Application.Features.Transfer.Commands.ReceiveTransfer;
 using ToroBank.Application.Features.Users;
 
 namespace ToroBank.WebApi.Controllers
 {
-    //[Route("api/[controller]")]
     [Route("spb")]
     [ApiController]
     public class TransferController : ControllerBase

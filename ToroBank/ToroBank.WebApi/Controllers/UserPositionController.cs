@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ToroBank.Application.Features.Assets;
-using ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets;
 using ToroBank.Application.Features.Positions.Queries;
 using ToroBank.WebApi.Helpers;
 
@@ -32,7 +31,5 @@ namespace ToroBank.WebApi.Controllers
             var response = await _mediator.Send(new GetUserPositionQuery() { Id = id, PageNumber = 1, PageSize = 100});
             return Ok(response.Data);
         }
-
-        
     }
 }

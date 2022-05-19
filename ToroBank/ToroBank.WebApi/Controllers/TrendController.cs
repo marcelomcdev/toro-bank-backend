@@ -38,9 +38,6 @@ namespace ToroBank.WebApi.Controllers
                     image = response.Asset.ImageName
                 } ));
             return Ok(l);
-        }
-
-        
-
+        }       
     }
 }

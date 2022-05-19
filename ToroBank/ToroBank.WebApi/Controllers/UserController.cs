@@ -6,7 +6,6 @@ using ToroBank.WebApi.Helpers;
 
 namespace ToroBank.WebApi.Controllers
 {
-    //[ApiController]
     public class UserController : MainController
     {
         private readonly IMediator _mediator;

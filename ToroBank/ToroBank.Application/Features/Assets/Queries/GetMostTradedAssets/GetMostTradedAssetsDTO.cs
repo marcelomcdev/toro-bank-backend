@@ -1,5 +1,4 @@
-﻿using ToroBank.Application.Common.DTOs.Assets;
-using ToroBank.Domain.Entities;
+﻿using ToroBank.Domain.Entities;
 
 namespace ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets
 {
