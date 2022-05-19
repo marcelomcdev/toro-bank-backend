@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ToroBank.Application.Features.Assets;
 using ToroBank.Application.Features.Assets.Queries.GetMostTradedAssets;
+using ToroBank.Application.Features.Positions.Queries;
 using ToroBank.WebApi.Helpers;
 
 namespace ToroBank.WebApi.Controllers
@@ -23,12 +24,12 @@ namespace ToroBank.WebApi.Controllers
         /// </summary>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        [HttpGet()]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromBody] GetMostTradedAssetsQuery cmd)
+        public async Task<IActionResult> Get(int id)
         {
-            var response = await _mediator.Send(cmd);
+            var response = await _mediator.Send(new GetUserPositionQuery() { Id = id, PageNumber = 1, PageSize = 100});
             return Ok(response.Data);
         }
 
