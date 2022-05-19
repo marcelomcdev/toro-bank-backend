@@ -30,19 +30,23 @@ namespace ToroBank.Application.Features.Positions.Queries
             }
 
             var assets = await _assetRepository.GetAllAsync();
-            var assetsOfUser = _userAssetRepository.GetAllAsync().Result.Where(f => f.Id == user.Id).ToList();
+            var allUserAssets = await _userAssetRepository.GetAllAsync();
+            var assetsOfUser = allUserAssets.Where(f => f.UserId == user.Id).ToList();
+            var groupAssetsOfUser = assetsOfUser.GroupBy(f => new { f.UserId, f.AssetId });
 
             UserPosition up = new UserPosition();
-            assetsOfUser.ForEach(f => up.Positions.Add(new Position()
+
+            groupAssetsOfUser.ToList().ForEach(f => up.Positions.Add(new Position()
             {
-                Amount = f.Quantity,
-                Symbol = assets.FirstOrDefault(g => g.Id == f.AssetId)?.Name ?? "",
-                CurrentPrice = assets.FirstOrDefault(g => g.Id == f.AssetId)?.Value ?? 0
-            }));
+                Amount = f.Sum(f => f.Quantity),
+                Symbol = assets.FirstOrDefault(g => g.Id == f.Key.AssetId)?.Name ?? "",
+                CurrentPrice = assets.FirstOrDefault(g => g.Id == f.Key.AssetId)?.Value ?? 0,
+                Image = assets.FirstOrDefault(g => g.Id == f.Key.AssetId)?.ImageName ?? ""
+            })); 
 
             up.CheckingAccountAmount = user.Balance;
-            assetsOfUser.ForEach(f => up.Consolidated += ((f.Quantity * assets.FirstOrDefault(e => e.Id == f.AssetId)?.Value ?? 0)));
-            up.Consolidated += up.CheckingAccountAmount;
+            assetsOfUser.ForEach(f => up.Investments += ((f.Quantity * assets.FirstOrDefault(e => e.Id == f.AssetId)?.Value ?? 0)));
+            up.Consolidated = (up.CheckingAccountAmount + up.Investments);
 
             GetUserPositionDTO dto = GetUserPositionDTO.ToDto(up);
             return Result.Ok(dto);
