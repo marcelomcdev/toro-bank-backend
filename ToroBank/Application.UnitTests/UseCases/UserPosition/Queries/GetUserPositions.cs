@@ -32,17 +32,18 @@ namespace Application.UnitTests.UseCases.Positions.Queries
         private GetUserPositionQuery sut;
         private CancellationTokenSource _tokenSource;
         private CancellationToken _ct;
-        
 
         [SetUp]
         public void Setup()
         {
+            mockUserPosition = new UserPosition();
             mockUserRepository = new Mock<IUserRepository>();
             mockAssetRepository = new Mock<IAssetRepository>();
             mockUserAssetRepository = new Mock<IUserAssetRepository>();
 
-            mockUserPosition = new UserPosition();
             mockUser = new User(300123, "Marcelo", "45358996060", 234);
+            mockUser.Id = 1;
+
             mockAssetsOfUser = new List<UserAsset>() {
                 new UserAsset(1,1,2),
                 new UserAsset(4,1,3)
