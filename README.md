@@ -10,10 +10,15 @@ Para isso, foi adotado utilizar os seguintes padrões:
   **Padrão CQRS - Command Query Responsability Segregation**
 
   Outras tecnologias usadas:
+  
   Swagger
+  
   Serilog
+  
   Entity Framework Core 
+  
   FluentValidation
+  
 
 
 # Como instalar as dependências do projeto
