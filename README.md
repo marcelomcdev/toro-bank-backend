@@ -1,17 +1,20 @@
-# toro-bank-backend
+# Toro Bank - Backend
 
 # Tecnologias
 O projeto de backend foi desenvolvido utilizando a plataforma .NET Core 6.0.
 A arquitetura definida para o projeto foi o Clean Architecture, com o fim de obter a separação das responsabilidades e aplicar os princípios do SOLID.
 Para isso, foi adotado utilizar os seguintes padrões:
 
-  Padrão Mediator
+  **Padrão Mediator**
   
-  Padrão CQRS - Command Query Responsability Segregation
+  **Padrão CQRS - Command Query Responsability Segregation**
 
+  Outras tecnologias usadas:
+  Swagger
+  Serilog
+  Entity Framework Core 
+  FluentValidation
 
-SwashBuckle.AspNetCore 6.2.3
-Serilog.AspNetCore 4.1.0
 
 # Como instalar as dependências do projeto
 Antes de executa o projeto é necessário baixar suas dependências. Para realizar este procedimento, execute o comando abaixo:
@@ -28,6 +31,10 @@ dotnet run
 Ou no Visual Studio, pressione a tecla **F5** para executar em modo de debug
 
 ![image](https://user-images.githubusercontent.com/79017725/169442742-89fde6de-0ac6-4d18-9df7-48e76514a331.png)
+
+Caso execute localmente com sucesso, aparecerá no navegador a seguinte página:
+
+![image](https://user-images.githubusercontent.com/79017725/169444464-982e08ee-d3ec-4350-ae2b-db5021f6ca76.png)
 
 
 # Como executar os testes
