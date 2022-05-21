@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  db:
+    image: marcelomdc/mssql-2019:custom
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: 24092210Mr@
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  api:
+    image: marcelomdc/toro-bank-backend:1.5
+    ports:
+      - 7025:443
+      - 5025:80
+    environment:
+      DB_ENV: db

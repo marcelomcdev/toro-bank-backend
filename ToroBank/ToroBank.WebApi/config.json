@@ -1,0 +1,13 @@
+{
+  "ConnectionStrings": {
+    //"ToroBankConnection": "Data Source=[DB_ENV];Initial Catalog=ToroBank;Persist Security Info=True; User ID=sa;Password=24092210Mr@",
+    "ToroBankConnection": "Server=localhost,1433;database=ToroBank;User Id=sa;Password=24092210Mr@;"
+    //"DefaultConnection": "Server=192.168.240.2,1433;database=ToroBank;User Id=sa;Password=24092210Mr@;"
+  },
+  "GeneralConfig": {
+    "Secret": "5B608423C1614A4A9C1ED9B3D4E6F78C",
+    "ExpirationHours": 1,
+    "Issuer": "StockSimulator",
+    "ValidIn": [ "https://localhost" ]
+  }
+}
