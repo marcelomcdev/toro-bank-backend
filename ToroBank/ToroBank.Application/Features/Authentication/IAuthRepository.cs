@@ -4,9 +4,10 @@ using ToroBank.Domain.Entities;
 
 namespace ToroBank.Application.Features.Authentication
 {
-    public interface IAuthRepository : IGenericRepository<User, int>
+    public interface IAuthRepository : IGenericRepository<User, int>, IAuthOperationRepository
     {
         Task<User?> ValidateCredentialsAsync(string email, string password);
         Task<Token?> GenerateToken();
+        Task<int?> GetIdByToken(string token);
     }
 }
