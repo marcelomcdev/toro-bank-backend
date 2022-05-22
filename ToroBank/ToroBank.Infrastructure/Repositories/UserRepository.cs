@@ -18,5 +18,10 @@ namespace ToroBank.Infrastructure.Persistence.Repositories
         {
             return await _users.Where(f => f.CPF == cpf).FirstOrDefaultAsync();
         }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _users.Where(f => f.Username == email).FirstOrDefaultAsync();
+        }
     }
 }
