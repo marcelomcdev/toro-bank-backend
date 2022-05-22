@@ -43,7 +43,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
         public void Setup()
         {
             mockUser = new User(300123, "Marcelo", "45358996060", 350);
-
+            mockUser.Id = 1;
             mockToken = new Token
             {
                 AccessToken = fakeToken,
@@ -57,6 +57,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(true));
             _mockTokenService.Setup(repo => repo.GenerateJwtToken(It.IsAny<string>())).Returns(Task.FromResult(mockToken));
             _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Returns(Task.FromResult(new TokenResponse() { token = mockToken }));
+            _mockTokenService.Setup(repo => repo.GetIdByToken(It.IsAny<string>())).Returns(Task.FromResult(1));
         }
 
         [Test]
@@ -64,6 +65,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
         {
             mockUser.Username = "marcelo.castro@gmail.com";
             mockUser.Password = "123456";
+            _sut = new AuthUserCommand() { Email = mockUser.Username, Password = mockUser.Password };
 
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             var result = handler.Handle(_sut, _ct).Result;
@@ -72,6 +74,8 @@ namespace Application.UnitTests.UseCases.Users.Commands
             Assert.IsNotNull(result.Data);
             Assert.AreEqual(fakeToken, result.Data.AccessToken);
             Assert.AreEqual("1", result.Data.UID);
+            Assert.AreEqual(mockToken, _mockTokenService.Object.GenerateJwtToken(mockUser.Username).Result);
+            Assert.AreEqual(1, _mockTokenService.Object.GetIdByToken(result.Data.AccessToken).Result);
         }
 
         [Test]
