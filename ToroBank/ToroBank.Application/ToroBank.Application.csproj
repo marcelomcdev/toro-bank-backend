@@ -12,6 +12,9 @@
 		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -20,6 +23,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\Assets\Commands\" />
+	  <Folder Include="Features\Authentication\Queries\" />
 	  <Folder Include="Features\PurchaseOrder\Queries\" />
 	  <Folder Include="Features\Transfer\Queries\" />
 	  <Folder Include="Features\UserAssets\Commands\CreateUserAsset\" />
