@@ -8,9 +8,9 @@ namespace ToroBank.Domain.Common.Configuration
 {
     public class GeneralConfig
     {
-        public string Secret { get; set; }
+        public string? Secret { get; set; }
         public int ExpirationHours { get; set; }
-        public string Issuer { get; set; }
-        public IEnumerable<string> ValidIn { get; set; }
+        public string? Issuer { get; set; }
+        public IEnumerable<string>? ValidIn { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace ToroBank.Domain.Entities
         public string Name { get; set; }
         public string CPF { get; set; }
         public decimal Balance { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
         
     }
 }

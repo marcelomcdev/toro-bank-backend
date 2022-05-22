@@ -85,6 +85,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = "123456";
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
@@ -97,6 +98,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = null;
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
@@ -108,6 +110,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = "123456";
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
@@ -120,6 +123,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = "";
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
@@ -131,6 +135,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = "123456";
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
@@ -143,6 +148,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Password = "123456789";
 
             _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            _mockTokenService.Setup(repo => repo.Authenticate(It.IsAny<TokenRequest>())).Throws<NotFoundException>();
             var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
             Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }

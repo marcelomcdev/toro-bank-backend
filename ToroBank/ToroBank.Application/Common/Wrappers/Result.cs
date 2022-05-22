@@ -68,7 +68,7 @@
             }
         }
 
-        protected internal Result(T data, bool isSuccess, IEnumerable<string> errors = null)
+        protected internal Result(T data, bool isSuccess, IEnumerable<string>? errors = null)
             : base(isSuccess, errors)
         {
             _data = data;

@@ -12,7 +12,7 @@ namespace ToroBank.Infrastructure.Persistence.Context
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
-        private IDbContextTransaction _currentTransaction;
+        private IDbContextTransaction? _currentTransaction;
 
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
