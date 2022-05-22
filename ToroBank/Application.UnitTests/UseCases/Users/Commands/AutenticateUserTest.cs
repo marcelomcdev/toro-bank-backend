@@ -47,7 +47,6 @@ namespace Application.UnitTests.UseCases.Users.Commands
             mockUser.Username = "marcelo.castro@gmail.com";
             mockUser.Password = "123456";
             var user = await _mockUserRepository.Object.GetByEmailAsync(mockUser.Username);
-            
 
             Assert.IsNotNull(user);
             Assert.AreEqual(mockUser.Username, user.Username);

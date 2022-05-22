@@ -24,6 +24,8 @@ namespace ToroBank.WebApi.Extensions
 
         public static void SetupServices(this WebApplicationBuilder builder)
         {
+            builder.Configuration.AddJsonFile("config.json", optional: false, reloadOnChange: true);
+
             builder.Services.AddApplication()
                             .AddInfrastructurePersistence(builder.Configuration)
                             .AddInfrastructureShared(builder.Configuration);
@@ -43,6 +45,7 @@ namespace ToroBank.WebApi.Extensions
                             .AddAuthenticationExtension(builder.Configuration)
                             .AddHealthChecksExtension(builder.Configuration)
                             .AddSwaggerExtension(builder.Configuration);
+
         }
 
         public static void SetupRequestPipeline(this WebApplication app)
@@ -62,8 +65,6 @@ namespace ToroBank.WebApi.Extensions
             app.UseSwaggerExtension(app.Configuration);
 
             app.UseHealthChecksExtension();
-
-            
 
             //In the future, if toro app will have an auth page, uncomment this line to require auth in endpoints. 
             app.MapControllers();//.RequireAuthorization(); 

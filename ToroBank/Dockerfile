@@ -28,7 +28,7 @@ FROM base AS final
 WORKDIR /app
 
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ToroBank.WebApi.dll","--environment:Development"]
+ENTRYPOINT ["dotnet", "ToroBank.WebApi.dll","--environment:Production"]
 
 #RUN chmod +x ./entrypoint.sh
 #CMD /bin/bash ./entrypoint.sh

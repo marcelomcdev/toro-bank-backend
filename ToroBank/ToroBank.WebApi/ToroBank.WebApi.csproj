@@ -20,12 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Dockerfile">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.3" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
 		<PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.2.0" />
@@ -71,6 +65,12 @@
 	  <ProjectReference Include="..\ToroBank.Application\ToroBank.Application.csproj" />
 	  <ProjectReference Include="..\ToroBank.Infrastructure.Shared\ToroBank.Infrastructure.Shared.csproj" />
 	  <ProjectReference Include="..\ToroBank.Infrastructure\ToroBank.Infrastructure.Persistence.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="entrypoint.sh">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 

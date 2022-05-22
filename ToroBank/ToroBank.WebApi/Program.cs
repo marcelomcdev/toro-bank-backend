@@ -15,7 +15,7 @@ try
     builder.SetupServices();
 
     var app = builder.Build();
-
+    
     // Configure the HTTP request pipeline.
     app.SetupRequestPipeline();
 
