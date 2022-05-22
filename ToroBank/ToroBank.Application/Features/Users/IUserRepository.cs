@@ -6,6 +6,7 @@ namespace ToroBank.Application.Features.Users
     public interface IUserRepository : IGenericRepository<User, int>
     {
         Task<User?> GetByCPFAsync(string cpf);
+        Task<User?> GetByEmailAsync(string email);
     }
 }
 
