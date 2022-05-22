@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToroBank.Application.Common.Exceptions;
+using ToroBank.Application.Common.Identity.Services;
 using ToroBank.Application.Common.Wrappers;
 using ToroBank.Application.Features.Users;
 
@@ -12,22 +13,23 @@ namespace ToroBank.Application.Features.Authentication.Queries
 {
     public class GetIdByTokenQueryHandler : IRequestHandler<GetIdByTokenQuery, Result<GetIdByTokenDTO>>
     {
-        private readonly IAuthRepository _authRepository;
+        
+        private readonly ITokenService _tokenService;
 
-        public GetIdByTokenQueryHandler(IAuthRepository authRepository)
+        public GetIdByTokenQueryHandler(ITokenService tokenService)
         {
-            _authRepository = authRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<Result<GetIdByTokenDTO>> Handle(GetIdByTokenQuery request, CancellationToken cancellationToken)
         {
-            var id = _authRepository.GetIdByToken(request.Token);
+            var id = _tokenService.GetIdByToken(request.Token);
             if (id == null)
             {
                 throw new NotFoundException("id", id);
             }
 
-            var dto = GetIdByTokenDTO.ToDto(int.Parse($"{(id == null ? 0 : id)}"));
+            var dto = GetIdByTokenDTO.ToDto(int.Parse($"{(id?.Result == null ? 0 : id?.Result)}"));
 
             return Result.Ok(dto);
 

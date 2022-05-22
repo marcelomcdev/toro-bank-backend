@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToroBank.Application.Features.Assets;
 using ToroBank.Application.Features.Authentication;
 using ToroBank.Application.Features.Authentication.Commands;
+using ToroBank.Application.Features.Authentication.Queries;
 using ToroBank.Application.Features.PurchaseOrder.Commands;
 using ToroBank.WebApi.Helpers;
 
@@ -29,5 +30,15 @@ namespace ToroBank.WebApi.Controllers
             var response = await _mediator.Send(cmd);
             return Created($"/[controller]/{response.Data}", response.Data);
         }
+
+        [HttpPost("validate-token")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetIdByToken([FromBody] GetIdByTokenQuery cmd)
+        {
+            var response = await _mediator.Send(cmd);
+            return Created($"/[controller]/{response.Data}", response.Data);
+        }
+
     }
 }
