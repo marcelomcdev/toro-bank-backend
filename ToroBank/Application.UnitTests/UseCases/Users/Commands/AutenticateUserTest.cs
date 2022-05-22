@@ -22,6 +22,7 @@ using ToroBank.Application.Features.Authentication;
 using ToroBank.Application.Features.Authentication.Commands;
 using ToroBank.Application.Common.Identity.Services;
 using ToroBank.Application.Common.Identity.Models;
+using System.IO;
 
 namespace Application.UnitTests.UseCases.Users.Commands
 {
@@ -36,17 +37,17 @@ namespace Application.UnitTests.UseCases.Users.Commands
         private AuthUserCommand _sut;
         private CancellationTokenSource _tokenSource;
         private CancellationToken _ct;
-        const string fakeToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEwMTEiLCJqdGkiOiJkNTM4Yzg2N2JlZTc0YTIyYmFjN2VhNzZjZTQxMzNiYSIsInJvbGUiOiIyMDAwIiwibmJmIjoxNjUzMTgwMzY1LCJleHAiOjE2NTMxODM5NjUsImlhdCI6MTY1MzE4MDM2NSwiaXNzIjoiQVBJIiwiYXVkIjoiQUdlbnRlRW1DYXNhIn0.aKnlJtdJJD7XqjlYkuhc3-viq_GdJOQTfg88lK7L7x-UKSkhJAxbVxGLaUP3zVVjU1Q3nShmPVmxlo60nO-WuEqwhqw_McT-B-XZ3tvFWGDLD1EjFC9VCenR5ygDIDniEHBi2QKhkPwhEDco1rg4IaFpN4caIk0b2Ik-_AiQKYJF91ac_vvRbcN9CxFCDRN-GE_-k4hfPbPbBGmapC9qTdHLA3JZKfI_RUDAy88ILcntTdsVH9rDCjNUaeaenGeZv__4OhMPyn0FqNMoPH59Et0rx3_gDpi8Fk67HDh8Ib1TJuXGVoF3rVfv-BqVoFsrNotTv_-5bYFAAvuwwJeirQ";
+        const string fakeToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJqdGkiOiIyNmE0N2ZmN2QwNWY0ODM3OWE0NWM0ZjE0OTVkY2I1MiIsInJvbGUiOiJVc2VyIiwibmJmIjoxNjUzMTg1MzU5LCJleHAiOjE2NTMxODg5NTksImlhdCI6MTY1MzE4NTM1OSwiaXNzIjoidG9yby1iYW5rIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzAyNSJ9.G2P2kQIQ1H1m8A5h1VsolO64pkV5ZqRpck_S5Ge1IKg";
         
         [SetUp]
         public void Setup()
         {
             mockUser = new User(300123, "Marcelo", "45358996060", 350);
-            
+
             mockToken = new Token
             {
                 AccessToken = fakeToken,
-                Client = "Marcelo Martins de Castro",
+                Expires = DateTime.Parse("2022-05-22T03:09:19.2797325Z"),
                 UID = "1"
             };
 
@@ -70,48 +71,76 @@ namespace Application.UnitTests.UseCases.Users.Commands
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
             Assert.AreEqual(fakeToken, result.Data.AccessToken);
-            Assert.AreEqual("Marcelo Martins de Castro", result.Data.Client);
             Assert.AreEqual("1", result.Data.UID);
         }
 
         [Test]
         public void Should_return_an_error_if_email_is_null()
         {
+            mockUser.Username = "";
+            mockUser.Password = "123456";
 
-            Assert.Fail();
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
 
 
         [Test]
         public void Should_return_an_error_if_password_is_is_null()
         {
-            Assert.Fail();
+            mockUser.Username = "marcelo.castro@gmail.com";
+            mockUser.Password = null;
+
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
 
         [Test]
         public void Should_return_an_error_if_email_is_empty()
         {
-            Assert.Fail();
+            mockUser.Username = "";
+            mockUser.Password = "123456";
+
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
 
 
         [Test]
         public void Should_return_an_error_if_password_is_is_empty()
         {
-            Assert.Fail();
+            mockUser.Username = "marcelo.castro@gmail.com";
+            mockUser.Password = "";
+
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
 
         [Test]
         public void Should_return_an_error_if_email_is_invalid()
         {
-            Assert.Fail();
+            mockUser.Username = "marcelo.castro@xxx.com";
+            mockUser.Password = "123456";
+
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
 
 
         [Test]
         public void Should_return_an_error_if_password_is_invalid()
         {
-            Assert.Fail();
+            mockUser.Username = "marcelo.castro@gmail.com";
+            mockUser.Password = "123456789";
+
+            _mockTokenService.Setup(repo => repo.IsValid(It.IsAny<TokenRequest>())).Returns(Task.FromResult(false));
+            var handler = new AuthUserCommandHandler(_mockAuthRepository.Object, _mockTokenService.Object);
+            Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(_sut, _ct));
         }
     }
 
