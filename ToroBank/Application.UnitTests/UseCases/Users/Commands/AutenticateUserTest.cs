@@ -48,7 +48,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             {
                 AccessToken = fakeToken,
                 Expires = DateTime.Parse("2022-05-22T03:09:19.2797325Z"),
-                UID = "1"
+                //UID = "1"
             };
 
             _mockUserRepository = new Mock<IUserRepository>();
@@ -73,7 +73,7 @@ namespace Application.UnitTests.UseCases.Users.Commands
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Data);
             Assert.AreEqual(fakeToken, result.Data.AccessToken);
-            Assert.AreEqual("1", result.Data.UID);
+            //Assert.AreEqual("1", result.Data.UID);
             Assert.AreEqual(mockToken, _mockTokenService.Object.GenerateJwtToken(mockUser.Username).Result);
             Assert.AreEqual(1, _mockTokenService.Object.GetIdByToken(result.Data.AccessToken).Result);
         }

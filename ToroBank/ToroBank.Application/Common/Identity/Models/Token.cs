@@ -11,7 +11,7 @@ namespace ToroBank.Application.Common.Identity.Models
         //public string? Client { get; set; }
 
         //[JsonProperty("uid")]
-        public string? UID { get; set; }
+        //public string? UID { get; set; }
         public DateTime? Expires { get; set; }
     }
 }

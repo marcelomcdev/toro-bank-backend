@@ -14,8 +14,6 @@ namespace ToroBank.Application.Common.Identity.Services
     {
         private readonly Token? _token;
         private readonly GeneralConfig _generalConfig;
-        //private readonly HttpContext _httpContext;
-
         private readonly IUserRepository _userRepository;
 
         public TokenService(IUserRepository userRepository, IOptions<GeneralConfig> generalConfig)
@@ -79,7 +77,7 @@ namespace ToroBank.Application.Common.Identity.Services
             {
                 AccessToken = token,
                 Expires = tokenDescriptor.Expires,
-                UID = $"{user.Id}"
+                //UID = $"{user.Id}"
             };
         }
 
@@ -91,7 +89,7 @@ namespace ToroBank.Application.Common.Identity.Services
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadToken(stream);
                 var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
-                var unique_name = tokenS.Claims.FirstOrDefault(claim => claim.Type == "unique_name").Value;
+                var unique_name = tokenS?.Claims?.FirstOrDefault(claim => claim.Type == "unique_name")?.Value;
                 return Task.FromResult(Convert.ToInt32(unique_name ?? "0"));
             }
             catch (Exception ex)
