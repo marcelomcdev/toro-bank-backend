@@ -4,13 +4,14 @@ namespace ToroBank.Application.Common.Identity.Models
 {
     public class Token
     {
-        [JsonProperty("access-token")]
+        //[JsonProperty("access-token")]
         public string? AccessToken { get; set; }
 
-        [JsonProperty("client")]
-        public string? Client { get; set; }
+        //[JsonProperty("client")]
+        //public string? Client { get; set; }
 
-        [JsonProperty("uid")]
+        //[JsonProperty("uid")]
         public string? UID { get; set; }
+        public DateTime? Expires { get; set; }
     }
 }

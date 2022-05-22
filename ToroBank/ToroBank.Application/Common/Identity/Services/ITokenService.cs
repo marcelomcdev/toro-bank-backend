@@ -8,5 +8,6 @@ namespace ToroBank.Application.Common.Identity.Services
         Task<bool> IsValid(TokenRequest request);
         Task<TokenResponse?> Authenticate(TokenRequest request);
         Task<Token?> GenerateJwtToken(string email);
+        Task<int> GetIdByToken(string token);
     }
 }

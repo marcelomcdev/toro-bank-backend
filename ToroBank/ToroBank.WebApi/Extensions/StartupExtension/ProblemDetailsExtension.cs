@@ -13,6 +13,8 @@ public static class ProblemDetailsExtension
     {
         return services.AddProblemDetails(x =>
         {
+            
+            x.Map<InvalidFieldExcetion>(ex => new StatusCodeProblemDetails(StatusCodes.Status404NotFound));
             x.Map<NotFoundException>(ex => new StatusCodeProblemDetails(StatusCodes.Status404NotFound));
             x.Map<ValidationException>(ex => new StatusCodeProblemDetails(StatusCodes.Status400BadRequest));
             x.Map<BadRequestException>(ex => new StatusCodeProblemDetails(StatusCodes.Status400BadRequest));

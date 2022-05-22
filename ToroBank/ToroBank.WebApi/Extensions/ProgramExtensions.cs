@@ -2,7 +2,9 @@
 using Serilog;
 
 using ToroBank.Application;
+using ToroBank.Application.Common.Identity.Services;
 using ToroBank.Application.Common.Interfaces.Services;
+using ToroBank.Domain.Common.Configuration;
 using ToroBank.Infrastructure.Persistence;
 using ToroBank.Infrastructure.Persistence.Context;
 using ToroBank.Infrastructure.Shared;
@@ -40,11 +42,15 @@ namespace ToroBank.WebApi.Extensions
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
 
             builder.Services.AddProblemDetailsExtension()
                             .AddAuthenticationExtension(builder.Configuration)
                             .AddHealthChecksExtension(builder.Configuration)
                             .AddSwaggerExtension(builder.Configuration);
+
+            builder.Services.Configure<GeneralConfig>(builder.Configuration.GetSection("GeneralConfig"));
 
         }
 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToroBank.Application.Common.Interfaces.Repositories;
 using ToroBank.Application.Features.Assets;
+using ToroBank.Application.Features.Authentication;
 using ToroBank.Application.Features.UserAssets;
 using ToroBank.Application.Features.Users;
 using ToroBank.Infrastructure.Persistence.Context;
@@ -31,6 +32,7 @@ namespace ToroBank.Infrastructure.Persistence
             services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>))
                     .AddScoped<IAssetRepository, AssetRepository>()
                     .AddScoped<IUserAssetRepository, UserAssetRepository>()
+                    .AddScoped<IAuthRepository, AuthRepository>()
                     .AddScoped<IUserRepository, UserRepository>();
             #endregion
 
