@@ -77,7 +77,6 @@ namespace ToroBank.Application.Common.Identity.Services
             {
                 AccessToken = token,
                 Expires = tokenDescriptor.Expires,
-                //UID = $"{user.Id}"
             };
         }
 
