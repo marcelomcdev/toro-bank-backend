@@ -110,10 +110,6 @@ namespace Application.UnitTests.UseCases
             }
         }
 
-        /*No exemplo acima o usuário deseja comprar 3 ações SANB11. Neste caso, a API deve chegar o valor de SANB11 naquele momento (no exemplo, R$40.77), verificar se o usuário tem 
-             * pelo menos R$122.31 disponível em conta corrente e, em caso afirmativo, realizar a compra (debitar o saldo e registrar as novas quantidades de ativos SANB11 ao cliente). 
-             * Caso não tenha saldo suficiente, ou o ativo informado seja invalido, a API deve retornar uma codido e uma mensagem de erro indicando "saldo insuficiente" ou "ativo invalido". 
-             * Esta operação deve impactar o saldo e a lista de ativos do usuário.*/
         [Test]
         public void Should_pass_if_conditions_are_valid()
         {
