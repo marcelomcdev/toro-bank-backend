@@ -1,12 +1,10 @@
 ﻿using Hellang.Middleware.ProblemDetails.Mvc;
 using Serilog;
-
 using ToroBank.Application;
 using ToroBank.Application.Common.Identity.Services;
 using ToroBank.Application.Common.Interfaces.Services;
 using ToroBank.Domain.Common.Configuration;
 using ToroBank.Infrastructure.Persistence;
-using ToroBank.Infrastructure.Persistence.Context;
 using ToroBank.Infrastructure.Shared;
 using ToroBank.WebApi.Extensions.StartupExtension;
 using ToroBank.WebApi.Extensions.StartupExtensions;

@@ -22,6 +22,11 @@ namespace ToroBank.WebApi.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Authenticates the user and returns a Bearer authorization token if valid
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -31,6 +36,11 @@ namespace ToroBank.WebApi.Controllers
             return Created($"/[controller]/{response.Data}", response.Data);
         }
 
+        /// <summary>
+        /// Converts a valid token to a userid
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         [HttpPost("validate-token")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
