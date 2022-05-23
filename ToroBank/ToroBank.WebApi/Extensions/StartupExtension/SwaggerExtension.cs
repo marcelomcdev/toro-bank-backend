@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 
@@ -19,7 +12,7 @@ namespace ToroBank.WebApi.Extensions.StartupExtension
         public static IServiceCollection AddSwaggerExtension(this IServiceCollection services, IConfiguration configuration)
         {
             var oauthAuthority = configuration.GetValue<string>("Authentication:Jwt:Authority");
-            var oauthDefinition = "oauth2";
+            
             var oauthScopes = new Dictionary<string, string>
             {
                 { configuration.GetValue<string>("Authentication:Swagger:Scopes:Api"), _apiName }
@@ -42,50 +35,10 @@ namespace ToroBank.WebApi.Extensions.StartupExtension
                         }
                     });
 
-                // Set the comments path for the Swagger JSON and UI - previously generated XML - csproj XML -> GenerateDocumentationFile
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //options.IncludeXmlComments(xmlPath);
-
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
-
-                options.AddSecurityDefinition(
-                    oauthDefinition,
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
-                        {
-                            ClientCredentials = new OpenApiOAuthFlow
-                            {
-                                AuthorizationUrl = new Uri($"{oauthAuthority}/connect/authorize"),
-                                TokenUrl = new Uri($"{oauthAuthority}/connect/token"),
-                                Scopes = oauthScopes
-                            },
-                            AuthorizationCode = new OpenApiOAuthFlow
-                            {
-                                AuthorizationUrl = new Uri($"{oauthAuthority}/connect/authorize"),
-                                TokenUrl = new Uri($"{oauthAuthority}/connect/token"),
-                                Scopes = oauthScopes
-                            }
-                        }
-                    });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = oauthDefinition
-                            }
-                        },
-                        oauthScopes.Keys.ToArray()
-                    } });
-
             });
         }
 
