@@ -6,7 +6,7 @@ services:
       - 1433:1433
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: ****22*****
+      SA_PASSWORD: 9+Es22G#qBL
       PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   api:
     image: marcelomdc/toro-bank-backend:1.5
